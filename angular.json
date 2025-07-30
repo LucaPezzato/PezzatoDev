@@ -25,6 +25,10 @@
                 "input": "src"
               },
               {
+                "glob": "404.html",
+                "input": "src"
+              },
+              {
                 "glob": "**/*",
                 "input": "src/assets/",
                 "output": "/assets/"

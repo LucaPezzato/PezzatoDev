@@ -2,6 +2,8 @@
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.1.1.
 
+🌐 **Live Site**: [https://lucapezzato.github.io/PezzatoDev/](https://lucapezzato.github.io/PezzatoDev/)
+
 ## Development server
 
 To start a local development server, run:
@@ -53,6 +55,20 @@ ng e2e
 ```
 
 Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+
+## Deployment
+
+### Manual Deployment
+
+To manually deploy to GitHub Pages:
+
+```bash
+pnpm run deploy
+```
+
+### Automatic Deployment
+
+The project is configured with GitHub Actions for automatic deployment. Any push to the `main` or `master` branch will automatically build and deploy the site to GitHub Pages.
 
 ## Additional Resources
 
