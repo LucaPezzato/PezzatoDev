@@ -1,0 +1,41 @@
+<div
+  class="flex flex-col justify-between md:flex-row md:p-4 p-2 m-4 gap-2 md:gap-8 rounded-2xl items-center"
+  id="hero-section"
+>
+  <div
+    class="transition-all duration-300 ease-out overflow-hidden flex items-center justify-center max-md:m-auto drop-shadow-lg"
+    [style.width.px]="imgWidth()"
+    [style.height.px]="imgWidth()"
+    (mouseover)="hoverImg.set(true)"
+    (mouseleave)="hoverImg.set(false)"
+  >
+    <svg [attr.viewBox]="'0 0 ' + imgWidth() + ' ' + imgWidth()">
+      <defs>
+        <clipPath id="blobClip">
+          <path [attr.d]="imgNormalBlobPath" />
+        </clipPath>
+      </defs>
+      <image
+        x="0"
+        y="0"
+        width="100%"
+        height="100%"
+        preserveAspectRatio="xMidYMid slice"
+        xlink:href="assets/face.png"
+        style="clip-path: url(#blobClip)"
+      />
+    </svg>
+  </div>
+  <div class="flex flex-col gap-4 flex-1 max-md:items-center mx-md:text-center">
+    <span class="text-6xl font-semibold pez-primary max-md:text-center"
+      >Full stack developer</span
+    >
+    <span class="font-medium md:text-2xl text-justify text-xl">
+      {{
+        isMobile()
+          ? "I'm a passionate full stack developer with a focus on building scalable, high-performance web applications. I turn complex ideas into seamless digital experiences. Let's collaborate to bring your vision to life."
+          : "I'm a passionate full stack developer with a focus on building scalable, high-performance web applications using Angular. From crafting intuitive frontends to architecting robust backends, I turn complex ideas into seamless digital experiences. Let's collaborate to bring your vision to life."
+      }}
+    </span>
+  </div>
+</div>

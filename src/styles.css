@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+@layer base {
+  html {
+    font-family: "YourCustomFont", system-ui, sans-serif;
+  }
+}
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer utilities {
+  .pez-background {
+    @apply dark:bg-gray-700 bg-stone-50 text-gray-700 dark:text-stone-50;
+  }
+  .pez-background-dark {
+    @apply dark:bg-gray-800 bg-stone-100 text-gray-800 dark:text-stone-100;
+  }
+  .pez-primary {
+    @apply dark:text-purple-400 text-purple-800;
+  }
+}
