@@ -1,5 +1,13 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  inject,
+  OnDestroy,
+  Renderer2,
+  ViewChild,
+} from '@angular/core';
 import { ColorContrastDirective } from '../../directives/color-contrast.directive';
 import { shuffleArray } from '../../functions/array.functions';
 import { PezThemeService } from '../../services/theme.service';
@@ -10,8 +18,18 @@ import { PezThemeService } from '../../services/theme.service';
   templateUrl: './knowledge.html',
   styleUrl: './knowledge.css',
 })
-export class PezKnowledge {
+export class PezKnowledge implements AfterViewInit, OnDestroy {
   themeService = inject(PezThemeService);
+  #renderer = inject(Renderer2);
+
+  @ViewChild('band', { static: true }) band!: ElementRef<HTMLDivElement>;
+
+  #intervalId: any;
+  #currentTranslate = 0;
+  #speed = 1; // pixels per frame
+  #widthOfSet = 0;
+  #isPaused = false;
+
   knowledge: {
     title: string;
     lightColor: string;
@@ -161,5 +179,46 @@ export class PezKnowledge {
 
   constructor() {
     this.knowledge = shuffleArray(this.knowledge);
+    this.knowledge = [
+      ...this.knowledge,
+      ...this.knowledge,
+      ...this.knowledge,
+      ...this.knowledge,
+    ];
+  }
+
+  ngAfterViewInit() {
+    this.#widthOfSet = this.band.nativeElement.scrollWidth / 4;
+    this.startAnimation();
+  }
+
+  ngOnDestroy() {
+    if (this.#intervalId) {
+      clearInterval(this.#intervalId);
+    }
+  }
+
+  private startAnimation() {
+    this.#intervalId = setInterval(() => {
+      if (!this.#isPaused) {
+        this.#currentTranslate += this.#speed;
+        if (this.#currentTranslate >= this.#widthOfSet) {
+          this.#currentTranslate -= this.#widthOfSet;
+        }
+        this.#renderer.setStyle(
+          this.band.nativeElement,
+          'transform',
+          `translateX(-${this.#currentTranslate}px)`,
+        );
+      }
+    }, 16); // ~60fps
+  }
+
+  pauseAnimation() {
+    this.#isPaused = true;
+  }
+
+  resumeAnimation() {
+    this.#isPaused = false;
   }
 }
