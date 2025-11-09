@@ -1,0 +1,117 @@
+<div class="flex flex-row gap-8 m-auto w-fit mt-2">
+  <div class="flex flex-col w-fit h-fit split-left">
+    <div class="flex flex-row flex-nowrap gap-1 w-fit">
+      <div class="grid-rows-3 h-fit gap-1 grid mt-[12px]">
+        <div class="key-cap" data-key="q" (click)="onKeyPress('q')">Q</div>
+        <div class="key-cap" data-key="a" (click)="onKeyPress('a')">A</div>
+        <div class="key-cap" data-key="z" (click)="onKeyPress('z')">Z</div>
+      </div>
+      <div class="mt-[12px] grid-rows-3 h-fit gap-1 grid">
+        <div class="key-cap" data-key="w" (click)="onKeyPress('w')">W</div>
+        <div class="key-cap" data-key="r" (click)="onKeyPress('r')">R</div>
+        <div class="key-cap" data-key="x" (click)="onKeyPress('x')">X</div>
+      </div>
+      <div class="mt-[4px] grid-rows-3 h-fit gap-1 grid">
+        <div class="key-cap" data-key="f" (click)="onKeyPress('f')">F</div>
+        <div class="key-cap" data-key="s" (click)="onKeyPress('s')">S</div>
+        <div class="key-cap" data-key="c" (click)="onKeyPress('c')">C</div>
+      </div>
+      <div class="mt-[0px] grid-rows-3 h-fit gap-1 grid">
+        <div class="key-cap" data-key="p" (click)="onKeyPress('p')">P</div>
+        <div class="key-cap" data-key="t" (click)="onKeyPress('t')">T</div>
+        <div class="key-cap" data-key="d" (click)="onKeyPress('d')">D</div>
+      </div>
+      <div class="mt-[4px] grid-rows-3 h-fit gap-1 grid">
+        <div class="key-cap" data-key="b" (click)="onKeyPress('b')">B</div>
+        <div class="key-cap" data-key="g" (click)="onKeyPress('g')">G</div>
+        <div class="key-cap" data-key="v" (click)="onKeyPress('v')">V</div>
+      </div>
+      <div class="mt-[8px] grid-rows-3 h-fit gap-1 grid">
+        <div class="key-cap" data-key="[" (click)="onKeyPress('[')">[</div>
+        <div class="key-cap" data-key="'" (click)="onKeyPress('\'')">'</div>
+        <div class="key-cap" data-key="/" (click)="onKeyPress('/')">/</div>
+      </div>
+    </div>
+    <div class="flex flex-row gap-2 w-fit pl-[120px]">
+      <div class="key-cap" data-key="escape" (click)="onKeyPress('escape')">
+        ESC
+      </div>
+      <div
+        class="key-cap rotate-12 mt-[6px]"
+        data-key="tab"
+        (click)="onKeyPress('tab')"
+      >
+        TAB
+      </div>
+      <div
+        class="key-cap rotate-[20deg] !h-[44px]"
+        data-key=" "
+        (click)="onKeyPress(' ')"
+      >
+        SPC
+      </div>
+    </div>
+  </div>
+  <div class="flex items-center justify-center px-8 max-w-md text-center">
+    <p class="text-sm leading-relaxed">
+      I'm passionate about custom mechanical keyboards, particularly the
+      ergonomic Corne split keyboard layout. I've fully embraced the Colemak
+      layout instead of QWERTY for improved typing efficiency and comfort. I
+      like to build my own keyboard and customize it to my preferences,
+      including firmware.
+    </p>
+  </div>
+  <div class="flex flex-col w-fit h-fit split-right">
+    <div class="flex flex-row flex-nowrap gap-1 w-fit">
+      <div class="mt-[8px] grid-rows-3 h-fit gap-1 grid">
+        <div class="key-cap" data-key="]" (click)="onKeyPress(']')">]</div>
+        <div class="key-cap" data-key="-" (click)="onKeyPress('-')">-</div>
+        <div class="key-cap" data-key="=" (click)="onKeyPress('=')">=</div>
+      </div>
+      <div class="mt-[4px] grid-rows-3 h-fit gap-1 grid">
+        <div class="key-cap" data-key="j" (click)="onKeyPress('j')">J</div>
+        <div class="key-cap" data-key="m" (click)="onKeyPress('m')">M</div>
+        <div class="key-cap" data-key="k" (click)="onKeyPress('k')">K</div>
+      </div>
+      <div class="mt-[0px] grid-rows-3 h-fit gap-1 grid">
+        <div class="key-cap" data-key="l" (click)="onKeyPress('l')">L</div>
+        <div class="key-cap" data-key="n" (click)="onKeyPress('n')">N</div>
+        <div class="key-cap" data-key="," (click)="onKeyPress(',')">,</div>
+      </div>
+      <div class="mt-[4px] grid-rows-3 h-fit gap-1 grid">
+        <div class="key-cap" data-key="u" (click)="onKeyPress('u')">U</div>
+        <div class="key-cap" data-key="e" (click)="onKeyPress('e')">E</div>
+        <div class="key-cap" data-key="." (click)="onKeyPress('.')">.</div>
+      </div>
+      <div class="mt-[12px] grid-rows-3 h-fit gap-1 grid">
+        <div class="key-cap" data-key="y" (click)="onKeyPress('y')">Y</div>
+        <div class="key-cap" data-key="i" (click)="onKeyPress('i')">I</div>
+        <div class="key-cap" data-key=";" (click)="onKeyPress(';')">;</div>
+      </div>
+      <div class="grid-rows-3 h-fit gap-1 grid mt-[12px]">
+        <div class="key-cap" data-key="o" (click)="onKeyPress('o')">O</div>
+        <div class="key-cap" data-key="h" (click)="onKeyPress('h')">H</div>
+        <div class="key-cap" data-key="\\" (click)="onKeyPress('\\')">\</div>
+      </div>
+    </div>
+    <div class="flex flex-row gap-2 w-fit pr-[120px] justify-end">
+      <div
+        class="key-cap -rotate-[20deg] !h-[44px]"
+        data-key="enter"
+        (click)="onKeyPress('enter')"
+      >
+        ENT
+      </div>
+      <div
+        class="key-cap -rotate-12 mt-[6px]"
+        data-key="backspace"
+        (click)="onKeyPress('backspace')"
+      >
+        BSP
+      </div>
+      <div class="key-cap" data-key="delete" (click)="onKeyPress('delete')">
+        DEL
+      </div>
+    </div>
+  </div>
+</div>

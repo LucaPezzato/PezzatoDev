@@ -31,6 +31,7 @@
     "@tailwindcss/postcss": "^4.1.11",
     "@types/d3-shape": "^3.1.7",
     "@types/three": "^0.178.1",
+    "autoprefixer": "^10.4.21",
     "d3-shape": "^3.2.0",
     "jquery": "^3.7.1",
     "lodash": "^4.17.21",

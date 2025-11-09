@@ -4,6 +4,10 @@
   html {
     font-family: "YourCustomFont", system-ui, sans-serif;
   }
+  
+  body {
+    overflow-x: hidden;
+  }
 }
 
 @custom-variant dark (&:where(.dark, .dark *));

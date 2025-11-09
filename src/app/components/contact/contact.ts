@@ -4,9 +4,9 @@ import { Social } from '../../services/social';
 @Component({
   selector: 'pez-contact',
   imports: [],
-  templateUrl: './contact.html'
+  templateUrl: './contact.html',
 })
-export class Contact {
+export class PezContact {
   private socialService = inject(Social);
   socials = this.socialService.getSocialMedia();
 }
