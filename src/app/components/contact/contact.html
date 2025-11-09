@@ -1,0 +1,23 @@
+<div class="py-12">
+  <div class="container mx-auto px-4">
+    <h2 class="text-3xl font-bold text-center mb-8">Contact Me</h2>
+    <div class="flex justify-center space-x-6">
+      @for (social of socials; track social.name) {
+        <a
+          [href]="social.url"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="flex flex-col items-center dark:text-gray-200 dark:hover:text-gray-100 text-gray-600 hover:text-gray-900"
+        >
+          <span
+            class="h-8 w-8 mask-contain mask-no-repeat mask-center"
+            [style.background-color]="'currentColor'"
+            [style.-webkit-mask-image]="'url(' + social.icon + ')'"
+            [style.mask-image]="'url(' + social.icon + ')'"
+          ></span>
+          <span class="mt-2 text-sm">{{ social.name }}</span>
+        </a>
+      }
+    </div>
+  </div>
+</div>
