@@ -2,9 +2,9 @@
 
 @layer base {
   html {
-    font-family: "YourCustomFont", system-ui, sans-serif;
+    font-family: "Google Sans Code", monospace;
   }
-  
+
   body {
     overflow-x: hidden;
   }
