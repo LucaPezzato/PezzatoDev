@@ -1,8 +1,7 @@
 @import "tailwindcss";
 .key-cap {
-  width: 30px;
-  height: 30px;
-  @apply rounded-md border-2 border-solid border-purple-700 cursor-pointer transition-all duration-100 ease-in-out flex items-center justify-center text-xs font-bold text-purple-300;
+  @apply md:w-[30px] md:h-[30px] w-[20px] h-[20px] md:text-sm text-[10px];
+  @apply rounded-md border-2 border-solid border-purple-700 cursor-pointer transition-all duration-100 ease-in-out flex items-center justify-center font-bold text-purple-300;
   background: linear-gradient(145deg, #2a2a3e, #1e1e30);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   position: relative;
