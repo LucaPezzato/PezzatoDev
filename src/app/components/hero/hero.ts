@@ -40,10 +40,8 @@ export class Hero {
   imgWidth = signal<number>(0);
   imgHeight = signal<number>(0);
   imgNormalBlobPath = this.generateBlobPath(10);
-  textNormalBlobPath = this.generateBlobPath(4);
 
   hoverImg = signal<boolean>(false);
-  hoverText = signal<boolean>(false);
 
   generateBlobPath(
     numberOfPoints = 10,

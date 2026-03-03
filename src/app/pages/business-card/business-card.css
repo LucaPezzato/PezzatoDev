@@ -1,0 +1,12 @@
+.business-card {
+  /* Smooth out the rotation so it doesn't look jittery */
+  transition: transform 0.1s ease-out;
+
+  /* Optional: improves 3D rendering */
+  transform-style: preserve-3d;
+}
+.content {
+  /* Optional: lifts the text off the card for extra depth */
+  transform: translateZ(50px);
+  width: fit-content;
+}
