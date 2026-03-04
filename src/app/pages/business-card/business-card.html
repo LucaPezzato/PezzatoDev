@@ -1,86 +1,136 @@
 <div
-  class="w-full h-full perspective-distant flex items-center justify-center"
+  class="w-full h-full perspective-distant flex items-center justify-center flex-col gap-4"
   (mousemove)="onMouseMove($event)"
   (mouseleave)="onMouseLeave()"
+  [class.hidden]="hidden()"
 >
   <div
     #card
-    class="business-card rounded-2xl shadow-2xl w-full h-fit max-w-[800px] m-auto p-2 relative bg-dracula-bg text-dracula-fg"
-    [style.transform]="transformStyle()"
+    class="business-card w-full h-fit max-w-[min(95%,800px)] mx-auto relative will-change-transform"
+    [class.flipped]="flipped()"
+    [style.transform]="!flipped() ? transformStyle() : ''"
   >
-    <div class="flex items-center">
-      <div
-        class="transition-all duration-300 ease-out overflow-hidden flex items-center justify-center max-md:m-auto drop-shadow-lg content"
-        [style.width.px]="imgWidth()"
-        [style.height.px]="imgWidth()"
-      >
-        <svg [attr.viewBox]="'0 0 ' + imgWidth() + ' ' + imgWidth()">
-          <defs>
-            <clipPath id="blobClip">
-              <path [attr.d]="imgNormalBlobPath" />
-            </clipPath>
-          </defs>
-          <image
-            x="0"
-            y="0"
-            width="100%"
-            height="100%"
-            preserveAspectRatio="xMidYMid slice"
-            xlink:href="assets/face.png"
-            style="clip-path: url(#blobClip)"
-          />
-        </svg>
+    <div
+      class="w-full h-fit backface-hidden text-dracula-fg bg-dracula-bg rounded-2xl shadow-lg outline outline-dracula-comment z-10 relative p-2"
+      style="transform-style: preserve-3d"
+    >
+      <div class="dracula-mouth">
+        <div class="tooth fang"></div>
+        <div class="tooth normal"></div>
+        <div class="tooth normal center"></div>
+        <div class="tooth normal center"></div>
+        <div class="tooth normal"></div>
+        <div class="tooth fang"></div>
       </div>
-      <div
-        class="flex flex-col"
-        [style.width]="'calc(100% - ' + imgWidth() + 'px)'"
-      >
-        <h1 class="text-4xl font-semibold text-dracula-purple">Luca Pezzato</h1>
-        <span class="text-lg content">
-          I turn complex ideas into seamless digital experiences.
-        </span>
-        <div class="h-[48px]">
-          <div
-            class="p-2 overflow-x-hidden absolute -z-10 content"
-            [style.left]="'calc(' + imgWidth() / 2 + 'px + .5rem)'"
-            [style.width]="
-              'calc(' + (card.offsetWidth - imgWidth() / 2) + 'px - 1rem)'
-            "
-          >
-            <pez-knowledge></pez-knowledge>
+      <div class="flex flex-col md:flex-row items-center">
+        <div
+          class="transition-all duration-300 ease-out overflow-hidden flex items-center justify-center max-md:m-auto drop-shadow-lg content"
+          [style.width.px]="imgWidth()"
+          [style.height.px]="imgWidth()"
+        >
+          <svg [attr.viewBox]="'0 0 ' + imgWidth() + ' ' + imgWidth()">
+            <defs>
+              <clipPath id="blobClip">
+                <path [attr.d]="imgNormalBlobPath" />
+              </clipPath>
+            </defs>
+            <image
+              x="0"
+              y="0"
+              width="100%"
+              height="100%"
+              preserveAspectRatio="xMidYMid slice"
+              xlink:href="assets/face.png"
+              style="clip-path: url(#blobClip)"
+            />
+          </svg>
+        </div>
+        <div
+          class="flex flex-col max-md:!w-full"
+          [style.width]="'calc(100% - ' + imgWidth() + 'px)'"
+        >
+          <h1 class="text-4xl font-semibold text-dracula-purple">
+            Luca Pezzato
+          </h1>
+          <span class="text-lg content">
+            I turn complex ideas into seamless digital experiences.
+          </span>
+          <div class="h-[48px]">
+            <div
+              class="p-2 overflow-x-hidden md:absolute relative max-md:!w-full -z-10 content max-md:!left-0"
+              [style.left]="'calc(' + imgWidth() / 2 + 'px + .5rem)'"
+              [style.width]="
+                'calc(' + (card.offsetWidth - imgWidth() / 2) + 'px - 1rem)'
+              "
+            >
+              <pez-knowledge></pez-knowledge>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="flex flex-row gap-4 items-center justify-center mb-2">
-      <span class="flex flex-row items-center gap-2">
-        <img src="assets/home-pin.svg" alt="" /> Padova, Italy
-      </span>
-      <span class="flex flex-row items-center gap-2">
-        <img src="assets/cake.svg" alt="" /> 19/11/2001
-      </span>
-      <span class="flex flex-row items-center gap-2">
-        <img src="assets/laptop.svg" alt="" /> Thinkpad T480
-      </span>
-    </div>
-    <div class="flex justify-center space-x-6">
-      @for (social of socials; track social.name) {
-        <a
-          [href]="social.url"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="flex flex-row items-center justify-center gap-2 dark:text-gray-200 dark:hover:text-gray-100 text-gray-600 hover:text-gray-900"
-        >
+      <div
+        class="flex flex-row gap-4 items-center justify-center mb-4 flex-wrap"
+      >
+        <span class="flex flex-row items-center gap-2 w-fit">
           <span
-            class="h-8 w-8 mask-contain mask-no-repeat mask-center"
+            class="h-6 w-6 mask-contain mask-no-repeat mask-center"
             [style.background-color]="'currentColor'"
-            [style.-webkit-mask-image]="'url(' + social.icon + ')'"
-            [style.mask-image]="'url(' + social.icon + ')'"
+            [style.-webkit-mask-image]="'url(assets/home-pin.svg)'"
+            [style.mask-image]="'url(assets/home-pin.svg)'"
           ></span>
-          <span class="text-sm">{{ social.userName }}</span>
-        </a>
-      }
+          Padova, Italy
+        </span>
+        <span class="flex flex-row items-center gap-2 w-fit">
+          <span
+            class="h-6 w-6 mask-contain mask-no-repeat mask-center"
+            [style.background-color]="'currentColor'"
+            [style.-webkit-mask-image]="'url(assets/cake.svg)'"
+            [style.mask-image]="'url(assets/cake.svg)'"
+          ></span>
+          19/11/2001
+        </span>
+        <span class="flex flex-row items-center gap-2 w-fit">
+          <span
+            class="h-6 w-6 mask-contain mask-no-repeat mask-center"
+            [style.background-color]="'currentColor'"
+            [style.-webkit-mask-image]="'url(assets/laptop.svg)'"
+            [style.mask-image]="'url(assets/laptop.svg)'"
+          ></span>
+          Thinkpad T480
+        </span>
+      </div>
+      <div class="flex justify-center space-x-6">
+        @for (social of socials; track social.name) {
+          <a
+            [href]="social.url"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="flex flex-row items-center justify-center gap-2 hover:scale-105 transition-all duration-300 ease-in-out"
+          >
+            <span
+              class="h-8 w-8 mask-contain mask-no-repeat mask-center text-dracula-green"
+              [style.background-color]="'currentColor'"
+              [style.-webkit-mask-image]="'url(' + social.icon + ')'"
+              [style.mask-image]="'url(' + social.icon + ')'"
+            ></span>
+            <span class="text-sm">{{ social.userName }}</span>
+          </a>
+        }
+      </div>
     </div>
+    <!-- BACK FACE -->
+    <div
+      class="absolute inset-0 w-full h-full backface-hidden bg-dracula-bg rounded-2xl shadow-lg outline outline-dracula-comment z-0 pointer-events-none"
+      style="transform: rotateY(180deg)"
+    ></div>
   </div>
+  <div
+    class="h-10 w-10 mask-contain mask-no-repeat mask-center text-dracula-purple hover:-rotate-360 transition-all duration-500 cursor-pointer origin-center ease-in-out hover:scale-110"
+    [style.background-color]="'currentColor'"
+    [style.-webkit-mask-image]="'url(assets/flip.svg)'"
+    [style.mask-image]="'url(assets/flip.svg)'"
+    (click)="flipCard()"
+    [class.opacity-0]="flipped()"
+  ></div>
 </div>

@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, signal, viewChild } from '@angular/core';
+import { Component, DestroyRef, ElementRef, inject, signal, viewChild } from '@angular/core';
 import * as d3 from 'd3-shape';
 import $ from 'jquery';
 import { PezKnowledge } from "../../components/knowledge/knowledge";
@@ -11,14 +11,18 @@ import { Social } from '../../services/social';
   styleUrl: './business-card.css'
 })
 export class PezBusinessCard {
+
   #documentObserver = ResizeObserver;
   #resizeTimeout: any;
   #socialService = inject(Social);
+  #destroyRef = inject(DestroyRef);
   socials = this.#socialService.getSocialMedia();
   isMobile = signal<boolean>(false);
   imgWidth = signal<number>(0);
   imgHeight = signal<number>(0);
   imgNormalBlobPath = this.generateBlobPath(10);
+  flipped = signal<boolean>(false);
+  hidden = signal<boolean>(false);
 
 
   ngOnInit() {
@@ -27,11 +31,11 @@ export class PezBusinessCard {
       this.#resizeTimeout = window.setTimeout(() => {
         this.isMobile.set($('body').width()! < 768);
         if (this.isMobile()) {
-          this.imgWidth.set($('body').width()!);
-          this.imgHeight.set($('body').width()! * 2);
+          this.imgWidth.set($('body').width()! / 1.5);
+          this.imgHeight.set($('body').width()! / 1.5);
         } else {
-          this.imgWidth.set($('body').width()! / 9);
-          this.imgHeight.set($('body').width()! / 9);
+          this.imgWidth.set(200);
+          this.imgHeight.set(200);
         }
         this.imgNormalBlobPath = this.generateBlobPath(
           10,
@@ -114,6 +118,16 @@ export class PezBusinessCard {
   onMouseLeave() {
     // Smoothly snap the card back to center when the mouse leaves the container
     this.transformStyle.set('rotateX(0deg) rotateY(0deg)');
+  }
+
+  flipCard() {
+    this.flipped.update((flipped) => !flipped);
+    let timeout = setTimeout(() => {
+      this.hidden.set(true);
+    }, 1000);
+    this.#destroyRef.onDestroy(() => {
+      clearTimeout(timeout);
+    });
   }
 
 }
