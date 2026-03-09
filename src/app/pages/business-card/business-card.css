@@ -1,21 +1,9 @@
 .business-card {
-  /* Smooth out the rotation so it doesn't look jittery */
-  transition: transform 0.1s ease-out;
+  /* Smooth out the rotation and height so it transitions cleanly */
+  transition: transform 0.1s ease-out, height 1s ease-in-out;
 
   /* Optional: improves 3D rendering */
   transform-style: preserve-3d;
-  &.flipped {
-    animation: flip-x 1s ease-in-out forwards;
-  }
-}
-
-@keyframes flip-x {
-  0% {
-    transform: rotateX(0deg) rotateY(0deg);
-  }
-  100% {
-    transform: rotateX(0deg) rotateY(180deg);
-  }
 }
 
 .content {
@@ -63,3 +51,4 @@
     var(--color-dracula-red) 100%
   );
 }
+

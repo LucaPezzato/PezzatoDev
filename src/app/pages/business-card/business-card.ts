@@ -3,10 +3,11 @@ import * as d3 from 'd3-shape';
 import $ from 'jquery';
 import { PezKnowledge } from "../../components/knowledge/knowledge";
 import { Social } from '../../services/social';
+import { PezCv } from "../cv/cv";
 
 @Component({
   selector: 'pez-business-card',
-  imports: [PezKnowledge],
+  imports: [PezKnowledge, PezCv],
   templateUrl: './business-card.html',
   styleUrl: './business-card.css'
 })
@@ -22,7 +23,7 @@ export class PezBusinessCard {
   imgHeight = signal<number>(0);
   imgNormalBlobPath = this.generateBlobPath(10);
   flipped = signal<boolean>(false);
-  hidden = signal<boolean>(false);
+  isAnimating = signal<boolean>(false);
 
 
   ngOnInit() {
@@ -42,6 +43,7 @@ export class PezBusinessCard {
           this.imgWidth(),
           this.imgHeight(),
         );
+        this.updateCardHeight();
       }, 200);
     }).observe(document.body);
   }
@@ -79,6 +81,25 @@ export class PezBusinessCard {
   }
 
   cardRef = viewChild<ElementRef<HTMLDivElement>>('card');
+  frontRef = viewChild<ElementRef<HTMLDivElement>>('frontFace');
+  backRef = viewChild<ElementRef<HTMLDivElement>>('backFace');
+
+  cardHeight = signal<number | undefined>(undefined);
+
+  ngAfterViewInit() {
+    setTimeout(() => this.updateCardHeight(), 1000);
+  }
+
+  updateCardHeight() {
+    const front = this.frontRef()?.nativeElement;
+    const back = this.backRef()?.nativeElement;
+
+    if (this.flipped() && back) {
+      this.cardHeight.set(back.scrollHeight);
+    } else if (!this.flipped() && front) {
+      this.cardHeight.set(front.scrollHeight);
+    }
+  }
 
   transformStyle = signal('rotateX(0deg) rotateY(0deg)');
 
@@ -101,9 +122,10 @@ export class PezBusinessCard {
     const maxRotation = 4;
 
     // 5. Calculate the rotation. 
-    // - Y-axis rotation is driven by X-axis mouse movement.
+    // - Y-axis rotation is driven by X-axis mouse movement. We invert it if on the backface to feel natural.
     // - X-axis rotation is driven by Y-axis mouse movement (inverted).
-    const rotateY = (mouseX / (rect.width / 2)) * maxRotation;
+    const directionY = this.flipped() ? -1 : 1;
+    const rotateY = (mouseX / (rect.width / 2)) * maxRotation * directionY;
     const rotateX = -(mouseY / (rect.height / 2)) * maxRotation;
 
     // 6. Clamp the values to ensure we don't exceed maxRotation 
@@ -112,22 +134,28 @@ export class PezBusinessCard {
     const clampedRotateY = Math.max(-maxRotation, Math.min(maxRotation, rotateY));
 
     // 7. Update the signal
-    this.transformStyle.set(`rotateX(${clampedRotateX}deg) rotateY(${clampedRotateY}deg)`);
+    const baseRotateY = this.flipped() ? 180 : 0;
+    this.transformStyle.set(`rotateX(${clampedRotateX}deg) rotateY(${baseRotateY + clampedRotateY}deg)`);
   }
 
   onMouseLeave() {
     // Smoothly snap the card back to center when the mouse leaves the container
-    this.transformStyle.set('rotateX(0deg) rotateY(0deg)');
+    const baseRotateY = this.flipped() ? 180 : 0;
+    this.transformStyle.set(`rotateX(0deg) rotateY(${baseRotateY}deg)`);
   }
 
   flipCard() {
+    this.isAnimating.set(true);
     this.flipped.update((flipped) => !flipped);
-    let timeout = setTimeout(() => {
-      this.hidden.set(true);
-    }, 1000);
-    this.#destroyRef.onDestroy(() => {
-      clearTimeout(timeout);
-    });
-  }
+    this.updateCardHeight();
 
+    const baseRotateY = this.flipped() ? 180 : 0;
+    this.transformStyle.set(`rotateX(0deg) rotateY(${baseRotateY}deg)`);
+
+    // reset animation state after 1s (matching transition duration)
+    let timeout = setTimeout(() => {
+      this.isAnimating.set(false);
+    }, 1000);
+    this.#destroyRef.onDestroy(() => clearTimeout(timeout));
+  }
 }
