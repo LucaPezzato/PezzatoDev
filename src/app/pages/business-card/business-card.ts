@@ -3,11 +3,10 @@ import * as d3 from 'd3-shape';
 import $ from 'jquery';
 import { PezKnowledge } from "../../components/knowledge/knowledge";
 import { Social } from '../../services/social';
-import { PezCv } from "../cv/cv";
 
 @Component({
   selector: 'pez-business-card',
-  imports: [PezKnowledge, PezCv],
+  imports: [PezKnowledge],
   templateUrl: './business-card.html',
   styleUrl: './business-card.css'
 })
@@ -120,6 +119,11 @@ export class PezBusinessCard {
   transformStyle = signal('rotateX(0deg) rotateY(0deg)');
 
   onMouseMove(event: MouseEvent) {
+    // Only apply 3D rotation effect if the device supports hover (ignores touch devices)
+    if (!window.matchMedia('(hover: hover)').matches) {
+      return;
+    }
+
     const cardEl = this.cardRef()?.nativeElement;
     if (!cardEl) return;
 
