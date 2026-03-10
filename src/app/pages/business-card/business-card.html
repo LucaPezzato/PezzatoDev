@@ -321,15 +321,19 @@
     </div>
   </div>
 
-  <div
-    class="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 bg-dracula-bg/80 backdrop-blur-md p-3 rounded-full shadow-lg border border-dracula-purple/50 flex items-center justify-center"
-  >
-    <div
-      class="h-10 w-10 mask-contain mask-no-repeat mask-center text-dracula-purple hover:-rotate-360 transition-all duration-500 cursor-pointer origin-center ease-in-out hover:scale-110"
-      [style.background-color]="'currentColor'"
-      [style.-webkit-mask-image]="'url(assets/flip.svg)'"
-      [style.mask-image]="'url(assets/flip.svg)'"
-      (click)="flipCard()"
-    ></div>
-  </div>
-</div>
+      <div
+        class="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 bg-dracula-bg/80 backdrop-blur-md p-3 rounded-full shadow-lg border border-dracula-purple/50 flex flex-row items-center justify-center gap-4">
+        <!-- Print Button -->
+        <div
+          class="h-8 w-8 mask-contain mask-no-repeat mask-center text-dracula-cyan hover:scale-110 transition-transform duration-200 cursor-pointer origin-center ease-in-out"
+          [style.background-color]="'currentColor'" [style.-webkit-mask-image]="'url(assets/print.svg)'"
+          [style.mask-image]="'url(assets/print.svg)'" (click)="printPage()" title="Stampa CV"></div>
+          
+        <div class="w-px h-6 bg-dracula-selection"></div> <!-- Divider -->
+    
+        <!-- Flip Button -->
+        <div
+          class="h-10 w-10 mask-contain mask-no-repeat mask-center text-dracula-purple hover:scale-110 transition-transform duration-200 cursor-pointer origin-center ease-in-out"
+          [style.background-color]="'currentColor'" [style.-webkit-mask-image]="'url(assets/flip.svg)'"
+          [style.mask-image]="'url(assets/flip.svg)'" (click)="flipCard()" title="Gira Carta"></div>
+      </div></div>

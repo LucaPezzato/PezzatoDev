@@ -164,6 +164,10 @@ export class PezBusinessCard {
     this.transformStyle.set(`rotateX(0deg) rotateY(${baseRotateY}deg)`);
   }
 
+  printPage() {
+    window.print();
+  }
+
   flipCard() {
     this.isAnimating.set(true);
     this.flipped.update((flipped) => !flipped);
