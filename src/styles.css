@@ -19,6 +19,22 @@
 @layer base {
   html {
     font-family: "Google Sans Code", monospace;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-dracula-purple) transparent;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--color-dracula-purple);
+    border-radius: 10px;
   }
 
   html,

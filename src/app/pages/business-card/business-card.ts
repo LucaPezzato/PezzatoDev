@@ -93,11 +93,27 @@ export class PezBusinessCard {
   updateCardHeight() {
     const front = this.frontRef()?.nativeElement;
     const back = this.backRef()?.nativeElement;
+    // Leave 120px for the floating button and some top padding so it doesn't overlap
+    const maxHeight = window.innerHeight - 120;
+
+    let frontContentHeight = 0;
+    if (front) {
+      front.style.height = 'auto';
+      frontContentHeight = front.scrollHeight;
+      front.style.removeProperty('height');
+    }
+
+    let backContentHeight = 0;
+    if (back) {
+      back.style.height = 'auto';
+      backContentHeight = back.scrollHeight;
+      back.style.removeProperty('height');
+    }
 
     if (this.flipped() && back) {
-      this.cardHeight.set(back.scrollHeight);
+      this.cardHeight.set(Math.min(backContentHeight, maxHeight));
     } else if (!this.flipped() && front) {
-      this.cardHeight.set(front.scrollHeight);
+      this.cardHeight.set(Math.min(frontContentHeight, maxHeight));
     }
   }
 

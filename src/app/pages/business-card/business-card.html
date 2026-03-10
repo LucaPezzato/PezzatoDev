@@ -1,57 +1,28 @@
-<div
-  class="w-full min-h-full perspective-distant flex items-center justify-center flex-col gap-4 py-8"
-  (mousemove)="onMouseMove($event)"
-  (mouseleave)="onMouseLeave()"
->
-  <div
-    #card
-    class="business-card w-full max-w-[min(95%,800px)] mx-auto relative will-change-transform"
+<div class="w-full h-dvh overflow-hidden perspective-distant flex items-center justify-center flex-col relative"
+  (mousemove)="onMouseMove($event)" (mouseleave)="onMouseLeave()">
+  <div #card class="business-card w-full max-w-[min(95%,800px)] mx-auto relative will-change-transform"
     [style.transition]="isAnimating() ? 'transform 1s ease-in-out, height 1s ease-in-out' : 'transform 0.1s ease-out, height 1s ease-in-out'"
-    [style.transform]="transformStyle()"
-    [style.height.px]="cardHeight()"
-  >
-    <div
-      #frontFace
-      class="w-full absolute top-0 left-0 backface-hidden text-dracula-fg bg-dracula-bg rounded-2xl shadow-lg outline outline-dracula-comment z-10 p-2"
-      style="transform-style: preserve-3d"
-      [class.opacity-0]="flipped() && !isAnimating()"
-      [class.pointer-events-none]="flipped()"
-    >
-      <div class="dracula-mouth">
-        <div class="tooth fang"></div>
-        <div class="tooth normal"></div>
-        <div class="tooth normal center"></div>
-        <div class="tooth normal center"></div>
-        <div class="tooth normal"></div>
-        <div class="tooth fang"></div>
-      </div>
+    [style.transform]="transformStyle()" [style.height.px]="cardHeight()">
+    <div #frontFace
+      class="w-full h-full absolute top-0 left-0 backface-hidden text-dracula-fg bg-dracula-bg rounded-2xl shadow-lg outline outline-dracula-comment p-2 overflow-hidden"
+      style="transform-style: preserve-3d" [class.opacity-0]="flipped() && !isAnimating()"
+      [class.pointer-events-none]="flipped()" [class.z-10]="!flipped()" [class.z-0]="flipped()">
+
       <div class="flex flex-col md:flex-row items-center">
         <div
           class="transition-all duration-300 ease-out overflow-hidden flex items-center justify-center max-md:m-auto drop-shadow-lg content"
-          [style.width.px]="imgWidth()"
-          [style.height.px]="imgWidth()"
-        >
+          [style.width.px]="imgWidth()" [style.height.px]="imgWidth()">
           <svg [attr.viewBox]="'0 0 ' + imgWidth() + ' ' + imgWidth()">
             <defs>
               <clipPath id="blobClip">
                 <path [attr.d]="imgNormalBlobPath" />
               </clipPath>
             </defs>
-            <image
-              x="0"
-              y="0"
-              width="100%"
-              height="100%"
-              preserveAspectRatio="xMidYMid slice"
-              xlink:href="assets/face.png"
-              style="clip-path: url(#blobClip)"
-            />
+            <image x="0" y="0" width="100%" height="100%" preserveAspectRatio="xMidYMid slice"
+              xlink:href="assets/face.png" style="clip-path: url(#blobClip)" />
           </svg>
         </div>
-        <div
-          class="flex flex-col max-md:!w-full"
-          [style.width]="'calc(100% - ' + imgWidth() + 'px)'"
-        >
+        <div class="flex flex-col max-md:!w-full" [style.width]="'calc(100% - ' + imgWidth() + 'px)'">
           <h1 class="text-4xl font-semibold text-dracula-purple">
             Luca Pezzato
           </h1>
@@ -59,151 +30,150 @@
             I turn complex ideas into seamless digital experiences.
           </span>
           <div class="h-[48px]">
-            <div
-              class="p-2 overflow-x-hidden md:absolute relative max-md:!w-full -z-10 content max-md:!left-0"
-              [style.left]="'calc(' + imgWidth() / 2 + 'px + .5rem)'"
-              [style.width]="
+            <div class="p-2 overflow-x-hidden md:absolute relative max-md:!w-full -z-10 content max-md:!left-0"
+              [style.left]="'calc(' + imgWidth() / 2 + 'px + .5rem)'" [style.width]="
                 'calc(' + (card.offsetWidth - imgWidth() / 2) + 'px - 1rem)'
-              "
-            >
+              ">
               <pez-knowledge></pez-knowledge>
             </div>
           </div>
         </div>
       </div>
 
-      <div
-        class="flex flex-row gap-4 items-center justify-center mb-4 flex-wrap"
-      >
+      <div class="flex flex-row gap-4 items-center justify-center mb-4 flex-wrap">
         <span class="flex flex-row items-center gap-2 w-fit">
-          <span
-            class="h-6 w-6 mask-contain mask-no-repeat mask-center"
-            [style.background-color]="'currentColor'"
+          <span class="h-6 w-6 mask-contain mask-no-repeat mask-center" [style.background-color]="'currentColor'"
             [style.-webkit-mask-image]="'url(assets/home-pin.svg)'"
-            [style.mask-image]="'url(assets/home-pin.svg)'"
-          ></span>
+            [style.mask-image]="'url(assets/home-pin.svg)'"></span>
           Padova, Italy
         </span>
         <span class="flex flex-row items-center gap-2 w-fit">
-          <span
-            class="h-6 w-6 mask-contain mask-no-repeat mask-center"
-            [style.background-color]="'currentColor'"
-            [style.-webkit-mask-image]="'url(assets/cake.svg)'"
-            [style.mask-image]="'url(assets/cake.svg)'"
-          ></span>
+          <span class="h-6 w-6 mask-contain mask-no-repeat mask-center" [style.background-color]="'currentColor'"
+            [style.-webkit-mask-image]="'url(assets/cake.svg)'" [style.mask-image]="'url(assets/cake.svg)'"></span>
           19/11/2001
         </span>
         <span class="flex flex-row items-center gap-2 w-fit">
-          <span
-            class="h-6 w-6 mask-contain mask-no-repeat mask-center"
-            [style.background-color]="'currentColor'"
-            [style.-webkit-mask-image]="'url(assets/laptop.svg)'"
-            [style.mask-image]="'url(assets/laptop.svg)'"
-          ></span>
+          <span class="h-6 w-6 mask-contain mask-no-repeat mask-center" [style.background-color]="'currentColor'"
+            [style.-webkit-mask-image]="'url(assets/laptop.svg)'" [style.mask-image]="'url(assets/laptop.svg)'"></span>
           Thinkpad T480
         </span>
       </div>
-      <div class="flex justify-center space-x-6">
+      <div class="flex justify-center space-x-6 pb-2">
         @for (social of socials; track social.name) {
-          <a
-            [href]="social.url"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="flex flex-row items-center justify-center gap-2 hover:scale-105 transition-all duration-300 ease-in-out"
-          >
-            <span
-              class="h-8 w-8 mask-contain mask-no-repeat mask-center text-dracula-green"
-              [style.background-color]="'currentColor'"
-              [style.-webkit-mask-image]="'url(' + social.icon + ')'"
-              [style.mask-image]="'url(' + social.icon + ')'"
-            ></span>
-            <span class="text-sm">{{ social.userName }}</span>
-          </a>
+        <a [href]="social.url" target="_blank" rel="noopener noreferrer"
+          class="flex flex-row items-center justify-center gap-2 hover:scale-105 transition-all duration-300 ease-in-out">
+          <span class="h-8 w-8 mask-contain mask-no-repeat mask-center text-dracula-green"
+            [style.background-color]="'currentColor'" [style.-webkit-mask-image]="'url(' + social.icon + ')'"
+            [style.mask-image]="'url(' + social.icon + ')'"></span>
+          <span class="text-sm">{{ social.userName }}</span>
+        </a>
         }
       </div>
     </div>
     <!-- BACK FACE -->
-  <div #backFace class="absolute top-0 left-0 w-full backface-hidden bg-dracula-bg rounded-2xl shadow-lg outline outline-dracula-comment z-0 text-dracula-fg"
-      [class.pointer-events-none]="!flipped()"
-      [class.opacity-0]="!flipped() && !isAnimating()"
-      style="transform: rotateY(180deg)">
-      <header class=" p-4 md:flex justify-between items-center">
+    <div #backFace
+      class="absolute top-0 left-0 w-full h-full backface-hidden bg-dracula-bg rounded-2xl shadow-lg outline outline-dracula-comment text-dracula-fg overflow-y-auto overflow-x-hidden"
+      [class.pointer-events-none]="!flipped()" [class.opacity-0]="!flipped() && !isAnimating()" [class.z-10]="flipped()"
+      [class.z-0]="!flipped()" style="transform: rotateY(180deg)">
+      <header
+        class="p-6 md:p-8 flex flex-col md:flex-row md:justify-between md:items-center gap-4 border-b border-dracula-selection">
+        <div class="flex items-center gap-4">
+          <img src="assets/face.png" alt="Luca Pezzato"
+            class="w-16 h-16 rounded-full border-2 border-dracula-purple object-cover drop-shadow-md">
           <div>
-              <h1 class="text-4xl font-bold tracking-tight">Luca Pezzato</h1>
-              <p class="text-dracula-purple text-lg mt-1">Senior Full-Stack Developer</p>
+            <h1 class="text-3xl font-bold tracking-tight text-dracula-fg">Luca Pezzato</h1>
+            <p class="text-dracula-purple text-lg mt-1 font-medium">Senior Full-Stack Developer</p>
           </div>
-          <div class="mt-4 md:mt-0 text-sm space-y-1 md:text-right">
-              <p>luca@pezzato.dev</p>
-              <p>Saccolongo Padova, IT</p>
-          </div>
+        </div>
+        <div class="mt-2 md:mt-0 text-sm space-y-1 md:text-right text-dracula-comment">
+          <p>luca@pezzato.dev</p>
+          <p>Saccolongo Padova, IT</p>
+        </div>
       </header>
 
-      <main class="p-8 space-y-8">
-          
-          <section>
-              <h2 class="text-xl font-bold uppercase tracking-wider border-b-2 border-dracula-green pb-2 mb-4 text-dracula-green">Chi sono</h2>
-              <p class=" leading-relaxed">
-                  Programmatore con esperienza in progetti 
-              </p>
-          </section>
+      <main class="p-6 md:p-8 space-y-8">
 
-          <section>
-              <h2 class="text-xl font-bold uppercase tracking-wider border-b-2 border-dracula-cyan pb-2 mb-4 text-dracula-cyan">Esperienze professionali</h2>
-              
-              <div class="space-y-6">
-                  <div>
-                      <div class="flex justify-between items-baseline">
-                          <h3 class="text-lg font-bold text-dracula-comment">Sia Informatica</h3>
-                          <span class="text-sm font-medium  italic text-dracula-comment">2020 — Presente</span>
+        <section>
+          <h2
+            class="text-lg font-bold uppercase tracking-widest border-b border-dracula-selection pb-2 mb-4 text-dracula-purple">
+            Chi sono</h2>
+          <p class="leading-relaxed text-dracula-fg/90">
+            Sviluppatore Full-Stack mosso da una profonda passione per l'informatica e l'innovazione tecnologica. Amo affrontare sfide complesse e trasformarle in soluzioni digitali eleganti, efficienti e scalabili. Sono costantemente alla ricerca di nuovi strumenti per spingere i limiti di ciò che è possibile creare.
+          </p>
+        </section>
+
+        <section>
+          <h2
+            class="text-lg font-bold uppercase tracking-widest border-b border-dracula-selection pb-2 mb-4 text-dracula-purple">
+            Esperienze professionali</h2>
+
+          <div class="space-y-6">
+            <div>
+              <div class="flex flex-col md:flex-row md:justify-between md:items-baseline mb-1">
+                <h3 class="text-lg font-bold text-dracula-fg">Sia Informatica</h3>
+                <span class="text-sm font-medium italic text-dracula-comment">2020 — Presente</span>
+              </div>
+              <p class="text-dracula-cyan font-medium mb-3">Technical lead</p>
+              <ul class="list-disc list-outside ml-5 space-y-1 text-dracula-fg/80">
+                <li>Sviluppato framework aziendale per la creazione di applicazioni web altamente configurabili</li>
+                <li>Sviluppati applicativi che sfruttano l'IA per analisi e ricerca di file</li>
+                <li>Rilasciati e gestiti in produzione decine di portali</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+                  <section>
+                      <h2 class="text-lg font-bold uppercase tracking-widest border-b border-dracula-selection pb-2 mb-4 text-dracula-purple">Skills</h2>
+                      <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                          <div class="bg-dracula-selection/30 p-3 rounded-lg border border-dracula-selection">
+                              <h4 class="font-bold text-dracula-fg mb-1">Frontend</h4>
+                              <p class="text-sm text-dracula-comment leading-relaxed">Angular, Tailwind CSS, HTML, JavaScript</p>
+                          </div>
+                          <div class="bg-dracula-selection/30 p-3 rounded-lg border border-dracula-selection">
+                              <h4 class="font-bold text-dracula-fg mb-1">Backend</h4>
+                              <p class="text-sm text-dracula-comment leading-relaxed">C#, .NET, Node.js, Python</p>
+                          </div>
+                          <div class="bg-dracula-selection/30 p-3 rounded-lg border border-dracula-selection">
+                              <h4 class="font-bold text-dracula-fg mb-1">DevOps & Tools</h4>
+                              <p class="text-sm text-dracula-comment leading-relaxed">Docker, Git, GitHub, Open API</p>
+                          </div>
+                          <div class="bg-dracula-selection/30 p-3 rounded-lg border border-dracula-selection">
+                              <h4 class="font-bold text-dracula-fg mb-1">Databases</h4>
+                              <p class="text-sm text-dracula-comment leading-relaxed">MS SQL Server, Postgres</p>
+                          </div>
+                          <div class="bg-dracula-selection/30 p-3 rounded-lg border border-dracula-selection col-span-2 md:col-span-2">
+                              <h4 class="font-bold text-dracula-fg mb-1">Other Tools</h4>
+                              <p class="text-sm text-dracula-comment leading-relaxed">VS Code, Visual Studio, Windows, Linux, VLLM</p>
+                          </div>
                       </div>
-                      <p class="text font-medium mb-2">Technical lead</p>
-                      <ul class="list-disc list-outside ml-5  space-y-1">
-                          <li>Sviluppato framework aziendale per la creazione di applicazioni web altamente configurabili</li>
-                          <li>Sviluppati applicativi che sfruttano l'IA per analisi e ricerca di file</li>
-                          <li>Rilasciati e gestiti in produzione decine di portali</li>
-                      </ul>
-                  </div>
-              </div>
-          </section>
+                  </section>
 
-          <section>
-              <h2 class="text-xl font-bold uppercase tracking-wider border-b-2 border-dracula-orange pb-2 mb-4 text-dracula-orange">Skills</h2>
-              <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  <div>
-                      <h4 class="font-bold text-slate-800 mb-1">Languages</h4>
-                      <p class="text-sm ">TypeScript, Python, Go, SQL</p>
-                  </div>
-                  <div>
-                      <h4 class="font-bold text-slate-800 mb-1">Frameworks</h4>
-                      <p class="text-sm ">React, Next.js, FastAPI, Node.js</p>
-                  </div>
-                  <div>
-                      <h4 class="font-bold text-slate-800 mb-1">Tools</h4>
-                      <p class="text-sm ">Docker, AWS, Terraform, Git</p>
-                  </div>
+        <section>
+          <h2
+            class="text-lg font-bold uppercase tracking-widest border-b border-dracula-selection pb-2 mb-4 text-dracula-purple">
+            Formazione</h2>
+          <div class="flex flex-col md:flex-row md:justify-between md:items-baseline">
+            <div class="w-full">
+              <div class="flex flex-col md:flex-row md:justify-between md:items-baseline mb-1">
+                <h3 class="text-lg font-bold text-dracula-fg">ITI Severi Padova</h3>
+                <span class="text-sm font-medium italic text-dracula-comment">Diplomato 2020</span>
               </div>
-          </section>
-
-          <section>
-              <h2 class="text-xl font-bold uppercase tracking-wider border-b-2 border-dracula-red pb-2 mb-4 text-dracula-red">Formazione</h2>
-              <div class="flex justify-between items-baseline">
-                  <div>
-                      <h3 class="font-bold text-dracula-comment">ITI Severi Padova</h3>
-                      <p class="">Perito informatico 96/100</p>
-                  </div>
-                  <span class="text-sm text-dracula-comment italic">Diplomato 2020</span>
-              </div>
-          </section>
+              <p class="text-dracula-fg/80">Perito informatico 96/100</p>
+            </div>
+          </div>
+        </section>
 
       </main>
+    </div>
   </div>
-  </div>
+
   <div
-    class="h-10 w-10 mask-contain mask-no-repeat mask-center text-dracula-purple hover:-rotate-360 transition-all duration-500 cursor-pointer origin-center ease-in-out hover:scale-110"
-    [style.background-color]="'currentColor'"
-    [style.-webkit-mask-image]="'url(assets/flip.svg)'"
-    [style.mask-image]="'url(assets/flip.svg)'"
-    (click)="flipCard()"
-  ></div>
+    class="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 bg-dracula-bg/80 backdrop-blur-md p-3 rounded-full shadow-lg border border-dracula-purple/50 flex items-center justify-center">
+    <div
+      class="h-10 w-10 mask-contain mask-no-repeat mask-center text-dracula-purple hover:-rotate-360 transition-all duration-500 cursor-pointer origin-center ease-in-out hover:scale-110"
+      [style.background-color]="'currentColor'" [style.-webkit-mask-image]="'url(assets/flip.svg)'"
+      [style.mask-image]="'url(assets/flip.svg)'" (click)="flipCard()"></div>
+  </div>
 
 </div>

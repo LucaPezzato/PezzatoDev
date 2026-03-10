@@ -175,6 +175,12 @@ export class PezKnowledge implements AfterViewInit, OnDestroy {
         darkColor: 'bg-gray-400',
         link: 'https://github.com/',
       },
+      {
+        title: 'Postgres',
+        lightColor: 'bg-blue-600',
+        darkColor: 'bg-blue-400',
+        link: 'https://www.postgresql.org/',
+      }
     ];
 
   constructor() {

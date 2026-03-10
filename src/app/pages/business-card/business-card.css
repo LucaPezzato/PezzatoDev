@@ -1,6 +1,8 @@
 .business-card {
   /* Smooth out the rotation and height so it transitions cleanly */
-  transition: transform 0.1s ease-out, height 1s ease-in-out;
+  transition:
+    transform 0.1s ease-out,
+    height 1s ease-in-out;
 
   /* Optional: improves 3D rendering */
   transform-style: preserve-3d;
@@ -11,44 +13,3 @@
   transform: translateZ(50px);
   width: fit-content;
 }
-
-.dracula-mouth {
-  position: absolute;
-  top: -2px;
-  right: 6px; /* Keeps it slightly away from the absolute edge */
-  display: flex;
-  gap: 1px; /* Tighter spacing for smaller teeth */
-  padding: 2px 6px 10px 6px;
-  border-radius: 0 0 40px 40px; /* Rounds the bottom of the mouth */
-}
-
-/* Base tooth styling - much smaller now */
-.tooth {
-  width: 6px;
-}
-
-/* Flat front incisors */
-.normal {
-  background-color: #fcfcfc;
-  height: 10px;
-  border-radius: 0 0 2px 2px;
-}
-
-/* Center front teeth are a tiny bit longer */
-.center {
-  width: 8px;
-}
-
-/* The Razor-Sharp Fangs */
-.fang {
-  height: 22px;
-  /* Uses a polygon to cut a perfect, razor-sharp triangle */
-  clip-path: polygon(0 0, 100% 0, 50% 100%);
-  /* Gradient gives a 3D effect since clip-path removes box-shadows */
-  background: linear-gradient(
-    to bottom,
-    #fcfcfc 30%,
-    var(--color-dracula-red) 100%
-  );
-}
-
