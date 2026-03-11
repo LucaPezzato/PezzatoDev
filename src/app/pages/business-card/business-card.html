@@ -180,14 +180,19 @@
             </p>
           </div>
         </div>
-                <div class="mt-2 md:mt-0 text-sm space-y-1 md:text-right text-dracula-comment">
-                  <p>
-                    <a href="mailto:luca&#64;pezzato.dev" class="hover:text-dracula-purple transition-colors duration-200 cursor-pointer">
-                      luca&#64;pezzato.dev
-                    </a>
-                  </p>
-                  <p>Saccolongo Padova, IT</p>
-                </div>
+        <div
+          class="mt-2 md:mt-0 text-sm space-y-1 md:text-right text-dracula-comment"
+        >
+          <p>
+            <a
+              href="mailto:luca&#64;pezzato.dev"
+              class="hover:text-dracula-purple transition-colors duration-200 cursor-pointer"
+            >
+              luca&#64;pezzato.dev
+            </a>
+          </p>
+          <p>Saccolongo Padova, IT</p>
+        </div>
       </header>
 
       <main class="p-6 md:p-8 space-y-8">
@@ -227,17 +232,28 @@
               </div>
               <p class="text-dracula-cyan font-medium mb-3">Technical lead</p>
               <ul
-                class="list-disc list-outside ml-5 space-y-1 text-dracula-fg/80"
+                class="list-disc list-outside ml-5 space-y-2 text-dracula-fg/80"
               >
                 <li>
-                  Sviluppato framework aziendale per la creazione di
-                  applicazioni web altamente configurabili
+                  Sviluppo di un framework aziendale proprietario (Frontend
+                  Angular, Backend .NET, DB MS SQL) per la rapida creazione e
+                  deploy di applicazioni web complesse e altamente
+                  configurabili, guidando un team di 3 sviluppatori.
                 </li>
                 <li>
-                  Sviluppati applicativi che sfruttano l'IA per analisi e
-                  ricerca di file
+                  Progettazione di applicativi basati su LLM open-source (via
+                  vLLM su server proprietari) per l'analisi, la categorizzazione
+                  e la ricerca ibrida di documenti, sfruttando PostgreSQL
+                  (pgvector) per la gestione degli embedding e sviluppando tool
+                  MCP personalizzati per l'integrazione AI-applicativo.
                 </li>
-                <li>Rilasciati e gestiti in produzione decine di portali</li>
+                <li>
+                  Sviluppo full-stack di molteplici applicativi ad hoc (gestione
+                  logistica e tracking carichi/scarichi, integrazione sistemi
+                  RFID, configuratori 3D interattivi), occupandomi dell'intero
+                  ciclo di vita fino al rilascio e alla gestione in produzione
+                  di decine di portali.
+                </li>
               </ul>
             </div>
           </div>
@@ -297,6 +313,40 @@
           <h2
             class="text-lg font-bold uppercase tracking-widest border-b border-dracula-selection pb-2 mb-4 text-dracula-purple"
           >
+            Soft Skills
+          </h2>
+          <div class="flex flex-wrap gap-3">
+            <span
+              class="bg-dracula-selection/30 text-dracula-fg px-3 py-1 rounded-full text-sm border border-dracula-selection"
+              >Problem Solving</span
+            >
+            <span
+              class="bg-dracula-selection/30 text-dracula-fg px-3 py-1 rounded-full text-sm border border-dracula-selection"
+              >Lavoro di Squadra</span
+            >
+            <span
+              class="bg-dracula-selection/30 text-dracula-fg px-3 py-1 rounded-full text-sm border border-dracula-selection"
+              >Adattabilità</span
+            >
+            <span
+              class="bg-dracula-selection/30 text-dracula-fg px-3 py-1 rounded-full text-sm border border-dracula-selection"
+              >Mentorship & Formazione</span
+            >
+            <span
+              class="bg-dracula-selection/30 text-dracula-fg px-3 py-1 rounded-full text-sm border border-dracula-selection"
+              >Progettazione Architetturale</span
+            >
+            <span
+              class="bg-dracula-selection/30 text-dracula-fg px-3 py-1 rounded-full text-sm border border-dracula-selection"
+              >Agile</span
+            >
+          </div>
+        </section>
+
+        <section>
+          <h2
+            class="text-lg font-bold uppercase tracking-widest border-b border-dracula-selection pb-2 mb-4 text-dracula-purple"
+          >
             Formazione
           </h2>
           <div
@@ -317,23 +367,83 @@
             </div>
           </div>
         </section>
+
+        <section>
+          <h2
+            class="text-lg font-bold uppercase tracking-widest border-b border-dracula-selection pb-2 mb-4 text-dracula-purple"
+          >
+            Lingue
+          </h2>
+          <div
+            class="flex flex-col md:flex-row md:justify-between md:items-baseline"
+          >
+            <div class="w-full">
+              <div
+                class="flex flex-col md:flex-row md:justify-between md:items-baseline mb-1"
+              >
+                <h3 class="text-lg font-bold text-dracula-fg">Inglese</h3>
+                <span class="text-sm font-medium italic text-dracula-comment"
+                  >Livello C1</span
+                >
+              </div>
+              <p class="text-dracula-fg/80">
+                Ottima comprensione scritta e orale, utilizzato quotidianamente
+                per lavoro, studio e documentazione tecnica.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Social Links Footer for Backface -->
+        <section class="pt-6 border-t border-dracula-selection print:hidden">
+          <div class="flex flex-wrap justify-center space-x-6">
+            @for (social of socials; track social.name) {
+              <a
+                [href]="social.url"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="flex flex-row items-center justify-center gap-2 hover:scale-105 transition-all duration-300 ease-in-out"
+              >
+                <span
+                  class="h-8 w-8 mask-contain mask-no-repeat mask-center text-dracula-green"
+                  [style.background-color]="'currentColor'"
+                  [style.-webkit-mask-image]="'url(' + social.icon + ')'"
+                  [style.mask-image]="'url(' + social.icon + ')'"
+                ></span>
+                <span class="text-sm text-dracula-fg">{{ social.userName }}</span>
+              </a>
+            }
+          </div>
+        </section>
+
       </main>
     </div>
   </div>
 
-      <div
-        class="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 bg-dracula-bg/80 backdrop-blur-md p-3 rounded-full shadow-lg border border-dracula-purple/50 flex flex-row items-center justify-center gap-4">
-        <!-- Print Button -->
-        <div
-          class="h-8 w-8 mask-contain mask-no-repeat mask-center text-dracula-cyan hover:scale-110 transition-transform duration-200 cursor-pointer origin-center ease-in-out"
-          [style.background-color]="'currentColor'" [style.-webkit-mask-image]="'url(assets/print.svg)'"
-          [style.mask-image]="'url(assets/print.svg)'" (click)="printPage()" title="Stampa CV"></div>
-          
-        <div class="w-px h-6 bg-dracula-selection"></div> <!-- Divider -->
-    
-        <!-- Flip Button -->
-        <div
-          class="h-10 w-10 mask-contain mask-no-repeat mask-center text-dracula-purple hover:scale-110 transition-transform duration-200 cursor-pointer origin-center ease-in-out"
-          [style.background-color]="'currentColor'" [style.-webkit-mask-image]="'url(assets/flip.svg)'"
-          [style.mask-image]="'url(assets/flip.svg)'" (click)="flipCard()" title="Gira Carta"></div>
-      </div></div>
+  <div
+    class="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 bg-dracula-bg/80 backdrop-blur-md p-3 rounded-full shadow-lg border border-dracula-purple/50 flex flex-row items-center justify-center gap-4"
+  >
+    <!-- Print Button -->
+    <div
+      class="h-8 w-8 mask-contain mask-no-repeat mask-center text-dracula-cyan hover:scale-110 transition-transform duration-200 cursor-pointer origin-center ease-in-out"
+      [style.background-color]="'currentColor'"
+      [style.-webkit-mask-image]="'url(assets/print.svg)'"
+      [style.mask-image]="'url(assets/print.svg)'"
+      (click)="printPage()"
+      title="Stampa CV"
+    ></div>
+
+    <div class="w-px h-6 bg-dracula-selection"></div>
+    <!-- Divider -->
+
+    <!-- Flip Button -->
+    <div
+      class="h-10 w-10 mask-contain mask-no-repeat mask-center text-dracula-purple hover:scale-110 transition-transform duration-200 cursor-pointer origin-center ease-in-out"
+      [style.background-color]="'currentColor'"
+      [style.-webkit-mask-image]="'url(assets/flip.svg)'"
+      [style.mask-image]="'url(assets/flip.svg)'"
+      (click)="flipCard()"
+      title="Gira Carta"
+    ></div>
+  </div>
+</div>
