@@ -118,9 +118,15 @@ export class PezBusinessCard {
 
   transformStyle = signal('rotateX(0deg) rotateY(0deg)');
 
+  #flipTimeout: any;
+
   onMouseMove(event: MouseEvent) {
     // Only apply 3D rotation effect if the device supports hover (ignores touch devices)
     if (!window.matchMedia('(hover: hover)').matches) {
+      return;
+    }
+
+    if (this.isAnimating()) {
       return;
     }
 
@@ -159,6 +165,9 @@ export class PezBusinessCard {
   }
 
   onMouseLeave() {
+    if (this.isAnimating()) {
+      return;
+    }
     // Smoothly snap the card back to center when the mouse leaves the container
     const baseRotateY = this.flipped() ? 180 : 0;
     this.transformStyle.set(`rotateX(0deg) rotateY(${baseRotateY}deg)`);
@@ -177,9 +186,10 @@ export class PezBusinessCard {
     this.transformStyle.set(`rotateX(0deg) rotateY(${baseRotateY}deg)`);
 
     // reset animation state after 1s (matching transition duration)
-    let timeout = setTimeout(() => {
+    clearTimeout(this.#flipTimeout);
+    this.#flipTimeout = setTimeout(() => {
       this.isAnimating.set(false);
     }, 1000);
-    this.#destroyRef.onDestroy(() => clearTimeout(timeout));
+    this.#destroyRef.onDestroy(() => clearTimeout(this.#flipTimeout));
   }
 }
