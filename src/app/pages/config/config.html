@@ -1,0 +1,318 @@
+<div
+  class="min-h-dvh bg-dracula-bg text-dracula-fg relative overflow-x-hidden selection:bg-dracula-selection selection:text-dracula-purple flex flex-col"
+  (mousemove)="onMouseMove($event)"
+  (mouseleave)="onMouseLeave()"
+>
+  <!-- Background Animated Ghosts & Bats -->
+  <pez-ghost-background
+    [parallaxX]="bgParallaxX()"
+    [parallaxY]="bgParallaxY()"
+    [cursorX]="cursorX()"
+    [cursorY]="cursorY()"
+  ></pez-ghost-background>
+
+  <!-- Top Navigation Header -->
+  <header class="sticky top-0 z-40 bg-dracula-bg/90 backdrop-blur-md border-b border-dracula-selection px-4 lg:px-8 py-3 flex flex-wrap items-center justify-between gap-4">
+    <div class="flex items-center gap-3">
+      <a
+        routerLink="/business-card"
+        class="flex items-center gap-2 text-dracula-comment hover:text-dracula-purple transition-colors duration-200 text-sm font-medium"
+      >
+        <span class="text-lg">←</span>
+        <span>Business Card</span>
+      </a>
+      <span class="text-dracula-selection">/</span>
+      <div class="flex items-center gap-2">
+        <span class="w-3 h-3 rounded-full bg-dracula-green animate-pulse"></span>
+        <span class="font-bold text-dracula-purple tracking-wide text-lg">~/.config</span>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="flex items-center bg-dracula-selection/40 p-1 rounded-xl border border-dracula-selection text-sm font-medium">
+      <button
+        (click)="setTab('dotfiles')"
+        class="px-4 py-1.5 rounded-lg transition-all duration-200 flex items-center gap-2"
+        [class.bg-dracula-purple]="activeTab() === 'dotfiles'"
+        [class.text-dracula-bg]="activeTab() === 'dotfiles'"
+        [class.font-semibold]="activeTab() === 'dotfiles'"
+        [class.text-dracula-fg]="activeTab() !== 'dotfiles'"
+      >
+        <span>📄</span>
+        <span>Dotfiles</span>
+      </button>
+      <button
+        (click)="setTab('packages')"
+        class="px-4 py-1.5 rounded-lg transition-all duration-200 flex items-center gap-2"
+        [class.bg-dracula-purple]="activeTab() === 'packages'"
+        [class.text-dracula-bg]="activeTab() === 'packages'"
+        [class.font-semibold]="activeTab() === 'packages'"
+        [class.text-dracula-fg]="activeTab() !== 'packages'"
+      >
+        <span>📦</span>
+        <span>Pacchetti & Setup</span>
+      </button>
+      <button
+        (click)="setTab('keybindings')"
+        class="px-4 py-1.5 rounded-lg transition-all duration-200 flex items-center gap-2"
+        [class.bg-dracula-purple]="activeTab() === 'keybindings'"
+        [class.text-dracula-bg]="activeTab() === 'keybindings'"
+        [class.font-semibold]="activeTab() === 'keybindings'"
+        [class.text-dracula-fg]="activeTab() !== 'keybindings'"
+      >
+        <span>⌨️</span>
+        <span>Keybindings</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="flex-1 relative z-10 max-w-7xl w-full mx-auto p-4 md:p-8 flex flex-col gap-6">
+
+    <!-- Hero / Title Banner -->
+    <section class="bg-dracula-selection/20 rounded-2xl border border-dracula-selection p-6 md:p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 shadow-xl">
+      <div>
+        <h1 class="text-3xl md:text-4xl font-extrabold text-dracula-purple tracking-tight flex items-center gap-3">
+          <span>Linux Configurations</span>
+          <span class="text-xs uppercase px-2.5 py-1 rounded-md bg-dracula-purple/20 text-dracula-purple border border-dracula-purple/40">Arch + Hyprland</span>
+        </h1>
+        <p class="text-dracula-comment text-base md:text-lg mt-2 max-w-2xl">
+          Configurazioni ufficiali dei dotfiles (<code class="text-dracula-cyan bg-dracula-bg px-1.5 py-0.5 rounded border border-dracula-selection">~/.config</code>) per Hyprland, Waybar, Kitty, Fish shell e guida completa alla reinstallazione dei pacchetti del sistema.
+        </p>
+      </div>
+
+      <!-- Quick Stats Badges -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 w-full md:w-auto shrink-0 text-center">
+        <div class="bg-dracula-bg/80 border border-dracula-selection p-3 rounded-xl">
+          <div class="text-xs text-dracula-comment uppercase font-semibold">Dotfiles</div>
+          <div class="text-xl font-bold text-dracula-cyan">{{ configFiles.length }} File</div>
+        </div>
+        <div class="bg-dracula-bg/80 border border-dracula-selection p-3 rounded-xl">
+          <div class="text-xs text-dracula-comment uppercase font-semibold">WM / Compositor</div>
+          <div class="text-xl font-bold text-dracula-green">Hyprland (Lua)</div>
+        </div>
+        <div class="bg-dracula-bg/80 border border-dracula-selection p-3 rounded-xl col-span-2 sm:col-span-1">
+          <div class="text-xs text-dracula-comment uppercase font-semibold">Shell</div>
+          <div class="text-xl font-bold text-dracula-orange">Fish Shell</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 1: DOTFILES BROWSER -->
+    @if (activeTab() === 'dotfiles') {
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 flex-1 items-start">
+
+        <!-- Sidebar File Explorer (Lg: 4 cols) -->
+        <aside class="lg:col-span-4 bg-dracula-bg/80 border border-dracula-selection rounded-2xl p-4 flex flex-col gap-4 shadow-lg backdrop-blur-sm">
+          <!-- Search Filter Input -->
+          <div class="relative">
+            <input
+              type="text"
+              placeholder="Cerca nei dotfiles..."
+              [value]="searchQuery()"
+              (input)="searchQuery.set($any($event.target).value)"
+              class="w-full bg-dracula-selection/30 border border-dracula-selection rounded-xl px-4 py-2 text-sm text-dracula-fg placeholder-dracula-comment focus:outline-none focus:border-dracula-purple transition-colors"
+            />
+            @if (searchQuery()) {
+              <button
+                (click)="searchQuery.set('')"
+                class="absolute right-3 top-1/2 -translate-y-1/2 text-dracula-comment hover:text-dracula-fg text-xs"
+              >
+                ✕
+              </button>
+            }
+          </div>
+
+          <!-- File Tree List -->
+          <div class="flex flex-col gap-1.5 max-h-[600px] overflow-y-auto pr-1">
+            @for (file of filteredConfigFiles(); track file.id) {
+              <button
+                (click)="selectFile(file.id)"
+                class="w-full text-left p-3 rounded-xl transition-all duration-150 border flex items-center justify-between group hover:bg-dracula-selection/30"
+                [class.bg-dracula-selection]="selectedFileId() === file.id"
+                [class.border-dracula-purple]="selectedFileId() === file.id"
+                [class.border-transparent]="selectedFileId() !== file.id"
+              >
+                <div class="flex flex-col min-w-0 pr-2">
+                  <span class="font-semibold text-sm truncate" [class.text-dracula-purple]="selectedFileId() === file.id" [class.text-dracula-fg]="selectedFileId() !== file.id">
+                    {{ file.title }}
+                  </span>
+                  <span class="text-xs text-dracula-comment truncate font-mono mt-0.5">
+                    {{ file.path }}
+                  </span>
+                </div>
+                <span class="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-dracula-selection text-dracula-cyan shrink-0">
+                  {{ file.language }}
+                </span>
+              </button>
+            }
+            @if (filteredConfigFiles().length === 0) {
+              <div class="p-6 text-center text-dracula-comment text-sm">
+                Nessun file trovato per "{{ searchQuery() }}"
+              </div>
+            }
+          </div>
+        </aside>
+
+        <!-- Main Code Viewer (Lg: 8 cols) -->
+        <section class="lg:col-span-8 bg-dracula-bg/90 border border-dracula-selection rounded-2xl overflow-hidden shadow-2xl flex flex-col">
+          <!-- File Viewer Header -->
+          <div class="bg-dracula-selection/40 border-b border-dracula-selection p-4 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex flex-col min-w-0">
+              <div class="flex items-center gap-2">
+                <span class="font-bold text-dracula-fg text-lg">{{ selectedFile().title }}</span>
+                <span class="text-xs px-2 py-0.5 rounded bg-dracula-purple/20 text-dracula-purple border border-dracula-purple/30 uppercase font-mono">
+                  {{ selectedFile().language }}
+                </span>
+              </div>
+              <span class="text-xs font-mono text-dracula-comment mt-0.5 truncate">
+                {{ selectedFile().path }}
+              </span>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex items-center gap-2">
+              <button
+                (click)="copyToClipboard(selectedFile().path, 'path_' + selectedFile().id)"
+                class="px-3 py-1.5 rounded-lg border border-dracula-selection bg-dracula-bg/60 hover:border-dracula-cyan text-xs text-dracula-fg transition-all flex items-center gap-1.5"
+              >
+                <span>📋</span>
+                <span>{{ copiedState() === 'path_' + selectedFile().id ? 'Percorso Copiato!' : 'Copia Percorso' }}</span>
+              </button>
+              <button
+                (click)="copyToClipboard(selectedFile().content, 'content_' + selectedFile().id)"
+                class="px-3 py-1.5 rounded-lg border border-dracula-purple/50 bg-dracula-purple text-dracula-bg hover:brightness-110 text-xs font-semibold transition-all flex items-center gap-1.5"
+              >
+                <span>⚡</span>
+                <span>{{ copiedState() === 'content_' + selectedFile().id ? 'Codice Copiato!' : 'Copia Codice' }}</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Description Banner -->
+          <div class="px-4 py-2 bg-dracula-selection/20 border-b border-dracula-selection text-xs text-dracula-comment">
+            {{ selectedFile().description }}
+          </div>
+
+          <!-- Code View Area -->
+          <div class="p-4 overflow-x-auto max-h-[650px] overflow-y-auto font-mono text-xs md:text-sm leading-relaxed text-dracula-fg/90 bg-[#1e1f29]">
+            <pre class="whitespace-pre"><code>{{ selectedFile().content }}</code></pre>
+          </div>
+        </section>
+      </div>
+    }
+
+    <!-- TAB 2: PACKAGES & REINSTALLATION COMMANDS -->
+    @if (activeTab() === 'packages') {
+      <div class="flex flex-col gap-8">
+
+        <!-- One-Click Full Reinstallation Script Block -->
+        <section class="bg-dracula-selection/30 border border-dracula-purple/40 rounded-2xl p-6 shadow-xl relative overflow-hidden">
+          <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
+            <div>
+              <h2 class="text-xl font-bold text-dracula-purple flex items-center gap-2">
+                <span>🚀</span>
+                <span>Script di Reinstallazione Completa (Arch Linux / AUR)</span>
+              </h2>
+              <p class="text-xs md:text-sm text-dracula-comment mt-1">
+                Esegui questo comando tramite <code class="text-dracula-cyan">yay</code> per installare tutti i pacchetti principali dell'ambiente di lavoro in un solo colpo.
+              </p>
+            </div>
+            <button
+              (click)="copyToClipboard(fullInstallCommand, 'full_install')"
+              class="px-4 py-2 rounded-xl bg-dracula-purple text-dracula-bg font-bold text-sm hover:brightness-110 transition-all shadow-md flex items-center gap-2"
+            >
+              <span>{{ copiedState() === 'full_install' ? '✓ Copiato negli Appunti!' : '📋 Copia Comando Completo' }}</span>
+            </button>
+          </div>
+
+          <div class="bg-[#1e1f29] border border-dracula-selection rounded-xl p-4 font-mono text-xs md:text-sm text-dracula-green overflow-x-auto">
+            <pre class="whitespace-pre-wrap"><code>{{ fullInstallCommand }}</code></pre>
+          </div>
+        </section>
+
+        <!-- Categorized Package Groups Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          @for (group of packageGroups; track group.id) {
+            <div class="bg-dracula-bg/90 border border-dracula-selection rounded-2xl p-6 flex flex-col justify-between shadow-lg hover:border-dracula-comment transition-all">
+              <div>
+                <div class="flex items-center justify-between gap-2 mb-2">
+                  <h3 class="text-lg font-bold text-dracula-cyan flex items-center gap-2">
+                    <span>{{ group.title }}</span>
+                  </h3>
+                  <span class="text-xs px-2.5 py-0.5 rounded-full bg-dracula-selection text-dracula-comment font-mono">
+                    {{ group.packages.length }} pacchetti
+                  </span>
+                </div>
+                <p class="text-xs text-dracula-comment mb-4">{{ group.description }}</p>
+
+                <!-- Package list badges -->
+                <div class="grid grid-cols-1 gap-2 mb-6">
+                  @for (pkg of group.packages; track pkg.name) {
+                    <div class="flex items-baseline justify-between p-2 rounded-lg bg-dracula-selection/20 border border-dracula-selection/40 text-xs">
+                      <span class="font-mono font-semibold text-dracula-fg">{{ pkg.name }}</span>
+                      <span class="text-[11px] text-dracula-comment truncate max-w-[220px]">{{ pkg.desc }}</span>
+                    </div>
+                  }
+                </div>
+              </div>
+
+              <!-- Group Install Command -->
+              <div class="pt-4 border-t border-dracula-selection flex flex-col gap-2">
+                <span class="text-[11px] text-dracula-comment uppercase tracking-wider font-semibold">Comando di installazione categoria:</span>
+                <div class="flex items-center gap-2 bg-[#1e1f29] border border-dracula-selection rounded-xl p-2.5 font-mono text-xs text-dracula-green overflow-x-auto">
+                  <code class="flex-1 truncate">{{ group.installCommand }}</code>
+                  <button
+                    (click)="copyToClipboard(group.installCommand, 'pkg_' + group.id)"
+                    class="px-2.5 py-1 rounded-lg bg-dracula-selection hover:bg-dracula-purple hover:text-dracula-bg text-dracula-fg text-xs transition-colors shrink-0"
+                  >
+                    {{ copiedState() === 'pkg_' + group.id ? 'Copiato!' : 'Copia' }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- TAB 3: HYPRLAND KEYBINDINGS CHEATSHEET -->
+    @if (activeTab() === 'keybindings') {
+      <section class="bg-dracula-bg/90 border border-dracula-selection rounded-2xl p-6 md:p-8 shadow-xl flex flex-col gap-6">
+        <div>
+          <h2 class="text-2xl font-bold text-dracula-purple flex items-center gap-2">
+            <span>⌨️</span>
+            <span>Hyprland Keybindings Quick Reference</span>
+          </h2>
+          <p class="text-xs md:text-sm text-dracula-comment mt-1">
+            Principali combinazioni di tasti configurate in <code class="text-dracula-cyan">~/.config/hypr/hyprland.lua</code> per il controllo delle finestre e del desktop.
+          </p>
+        </div>
+
+        <div class="overflow-x-auto border border-dracula-selection rounded-xl">
+          <table class="w-full text-left text-sm">
+            <thead class="bg-dracula-selection/40 text-dracula-purple font-mono uppercase text-xs border-b border-dracula-selection">
+              <tr>
+                <th class="p-3.5">Modificatore</th>
+                <th class="p-3.5">Tasto</th>
+                <th class="p-3.5">Azione / Comando Exec</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-dracula-selection/40 font-mono text-xs md:text-sm">
+              @for (kb of keybindings; track kb.key) {
+                <tr class="hover:bg-dracula-selection/20 transition-colors">
+                  <td class="p-3.5 text-dracula-cyan font-semibold">{{ kb.mod }}</td>
+                  <td class="p-3.5 text-dracula-green font-bold">
+                    <kbd class="bg-dracula-selection/60 px-2 py-1 rounded border border-dracula-comment text-dracula-fg">{{ kb.key }}</kbd>
+                  </td>
+                  <td class="p-3.5 text-dracula-fg/90">{{ kb.action }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+    }
+
+  </main>
+</div>

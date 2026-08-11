@@ -1,0 +1,22 @@
+/* Custom styling for code block & scrollbar in Config viewer */
+pre code {
+  font-family: "Google Sans Code", "JetBrains Mono", monospace;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(40, 42, 54, 0.5);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-dracula-comment);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-dracula-purple);
+}

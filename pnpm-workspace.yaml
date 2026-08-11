@@ -1,0 +1,18 @@
+packages:
+  - '.'
+
+allowBuilds:
+  '@parcel/watcher': true
+  '@tailwindcss/oxide': true
+  core-js: true
+  esbuild: true
+  lmdb: true
+  msgpackr-extract: true
+
+onlyBuiltDependencies:
+  - '@parcel/watcher'
+  - '@tailwindcss/oxide'
+  - 'core-js'
+  - 'esbuild'
+  - 'lmdb'
+  - 'msgpackr-extract'
