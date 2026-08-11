@@ -2,11 +2,12 @@ import { Component, DestroyRef, ElementRef, inject, signal, viewChild } from '@a
 import * as d3 from 'd3-shape';
 import $ from 'jquery';
 import { PezKnowledge } from "../../components/knowledge/knowledge";
+import { PezGhostBackground } from '../../components/ghost-background/ghost-background';
 import { Social } from '../../services/social';
 
 @Component({
   selector: 'pez-business-card',
-  imports: [PezKnowledge],
+  imports: [PezKnowledge, PezGhostBackground],
   templateUrl: './business-card.html',
   styleUrl: './business-card.css'
 })
@@ -23,6 +24,11 @@ export class PezBusinessCard {
   imgNormalBlobPath = this.generateBlobPath(10);
   flipped = signal<boolean>(false);
   isAnimating = signal<boolean>(false);
+
+  bgParallaxX = signal<number>(0);
+  bgParallaxY = signal<number>(0);
+  cursorX = signal<number>(-1000);
+  cursorY = signal<number>(-1000);
 
 
   ngOnInit() {
@@ -159,18 +165,30 @@ export class PezBusinessCard {
     const clampedRotateX = Math.max(-maxRotation, Math.min(maxRotation, rotateX));
     const clampedRotateY = Math.max(-maxRotation, Math.min(maxRotation, rotateY));
 
-    // 7. Update the signal
+    // 7. Update the signals
     const baseRotateY = this.flipped() ? 180 : 0;
     this.transformStyle.set(`rotateX(${clampedRotateX}deg) rotateY(${baseRotateY + clampedRotateY}deg)`);
+
+    // 8. Update background 3D parallax offset and cursor position
+    const bgX = (mouseX / (rect.width / 2)) * 35;
+    const bgY = (mouseY / (rect.height / 2)) * 35;
+    this.bgParallaxX.set(bgX);
+    this.bgParallaxY.set(bgY);
+    this.cursorX.set(event.clientX);
+    this.cursorY.set(event.clientY);
   }
 
   onMouseLeave() {
     if (this.isAnimating()) {
       return;
     }
-    // Smoothly snap the card back to center when the mouse leaves the container
+    // Smoothly snap the card and background parallax back to center when the mouse leaves
     const baseRotateY = this.flipped() ? 180 : 0;
     this.transformStyle.set(`rotateX(0deg) rotateY(${baseRotateY}deg)`);
+    this.bgParallaxX.set(0);
+    this.bgParallaxY.set(0);
+    this.cursorX.set(-1000);
+    this.cursorY.set(-1000);
   }
 
   printPage() {

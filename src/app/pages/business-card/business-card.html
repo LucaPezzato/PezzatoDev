@@ -3,6 +3,12 @@
   (mousemove)="onMouseMove($event)"
   (mouseleave)="onMouseLeave()"
 >
+  <pez-ghost-background
+    [parallaxX]="bgParallaxX()"
+    [parallaxY]="bgParallaxY()"
+    [cursorX]="cursorX()"
+    [cursorY]="cursorY()"
+  ></pez-ghost-background>
   <div
     #card
     class="business-card w-full max-w-[min(95%,800px)] mx-auto relative will-change-transform"
