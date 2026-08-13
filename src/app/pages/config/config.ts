@@ -5,8 +5,10 @@ import {
   CONFIG_FILES,
   PACKAGE_GROUPS,
   FULL_INSTALL_COMMAND,
+  WALLPAPERS,
   ConfigFile,
-  PackageGroup
+  PackageGroup,
+  WallpaperItem
 } from '../../data/config-data';
 
 @Component({
@@ -20,11 +22,14 @@ export class PezConfig {
   configFiles = CONFIG_FILES;
   packageGroups = PACKAGE_GROUPS;
   fullInstallCommand = FULL_INSTALL_COMMAND;
+  wallpapers = WALLPAPERS;
 
-  activeTab = signal<'dotfiles' | 'packages' | 'keybindings'>('dotfiles');
+  activeTab = signal<'dotfiles' | 'wallpapers' | 'packages' | 'keybindings'>('dotfiles');
   selectedFileId = signal<string>(CONFIG_FILES[0]?.id || '');
+  selectedWallpaperId = signal<string>(WALLPAPERS[0]?.id || '');
   searchQuery = signal<string>('');
   copiedState = signal<string | null>(null);
+  modalWallpaper = signal<WallpaperItem | null>(null);
 
   bgParallaxX = signal<number>(0);
   bgParallaxY = signal<number>(0);
@@ -33,6 +38,10 @@ export class PezConfig {
 
   selectedFile = computed(() => {
     return this.configFiles.find((f) => f.id === this.selectedFileId()) || this.configFiles[0];
+  });
+
+  selectedWallpaper = computed(() => {
+    return this.wallpapers.find((w) => w.id === this.selectedWallpaperId()) || this.wallpapers[0];
   });
 
   filteredConfigFiles = computed(() => {
@@ -51,8 +60,24 @@ export class PezConfig {
     this.selectedFileId.set(id);
   }
 
-  setTab(tab: 'dotfiles' | 'packages' | 'keybindings') {
+  selectWallpaper(id: string) {
+    this.selectedWallpaperId.set(id);
+  }
+
+  setTab(tab: 'dotfiles' | 'wallpapers' | 'packages' | 'keybindings') {
     this.activeTab.set(tab);
+  }
+
+  openWallpaperModal(wallpaper: WallpaperItem) {
+    this.modalWallpaper.set(wallpaper);
+  }
+
+  closeWallpaperModal() {
+    this.modalWallpaper.set(null);
+  }
+
+  fileReferencesWallpaper(file: ConfigFile): WallpaperItem | undefined {
+    return this.wallpapers.find((w) => file.content.includes(w.fileName) || file.content.includes(w.path));
   }
 
   copyToClipboard(text: string, label: string) {
@@ -96,6 +121,7 @@ export class PezConfig {
     { mod: 'SUPER + SHIFT', key: 'S', action: 'Screenshot area con Hyprshot' },
     { mod: 'SUPER', key: 'L', action: 'Blocca Schermo (Hyprlock)' },
     { mod: 'SUPER', key: 'M', action: 'Esci da Hyprland' },
+    { mod: 'Waybar Button', key: '', action: 'Apri Menu Spegnimento (Syspower)' },
     { mod: 'SUPER', key: 'F', action: 'Attiva / Disattiva Fullscreen' },
     { mod: 'SUPER', key: 'Space', action: 'Toggle Floating Window' },
     { mod: 'SUPER', key: 'Left / Right / Up / Down', action: 'Sposta focus tra finestre' },

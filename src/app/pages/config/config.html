@@ -1,5 +1,5 @@
 <div
-  class="min-h-dvh bg-dracula-bg text-dracula-fg relative overflow-x-hidden selection:bg-dracula-selection selection:text-dracula-purple flex flex-col"
+  class="min-h-dvh bg-dracula-bg text-dracula-fg relative overflow-x-clip selection:bg-dracula-selection selection:text-dracula-purple flex flex-col"
   (mousemove)="onMouseMove($event)"
   (mouseleave)="onMouseLeave()"
 >
@@ -12,7 +12,7 @@
   ></pez-ghost-background>
 
   <!-- Top Navigation Header -->
-  <header class="sticky top-0 z-40 bg-dracula-bg/90 backdrop-blur-md border-b border-dracula-selection px-4 lg:px-8 py-3 flex flex-wrap items-center justify-between gap-4">
+  <header class="sticky top-0 z-50 bg-dracula-bg/95 backdrop-blur-md border-b border-dracula-selection px-4 lg:px-8 py-3 flex flex-wrap items-center justify-between gap-4 shadow-lg">
     <div class="flex items-center gap-3">
       <a
         routerLink="/business-card"
@@ -40,6 +40,17 @@
       >
         <span>📄</span>
         <span>Dotfiles</span>
+      </button>
+      <button
+        (click)="setTab('wallpapers')"
+        class="px-4 py-1.5 rounded-lg transition-all duration-200 flex items-center gap-2"
+        [class.bg-dracula-purple]="activeTab() === 'wallpapers'"
+        [class.text-dracula-bg]="activeTab() === 'wallpapers'"
+        [class.font-semibold]="activeTab() === 'wallpapers'"
+        [class.text-dracula-fg]="activeTab() !== 'wallpapers'"
+      >
+        <span>🖼️</span>
+        <span>Wallpapers</span>
       </button>
       <button
         (click)="setTab('packages')"
@@ -77,7 +88,7 @@
           <span class="text-xs uppercase px-2.5 py-1 rounded-md bg-dracula-purple/20 text-dracula-purple border border-dracula-purple/40">Arch + Hyprland</span>
         </h1>
         <p class="text-dracula-comment text-base md:text-lg mt-2 max-w-2xl">
-          Configurazioni ufficiali dei dotfiles (<code class="text-dracula-cyan bg-dracula-bg px-1.5 py-0.5 rounded border border-dracula-selection">~/.config</code>) per Hyprland, Waybar, Kitty, Fish shell e guida completa alla reinstallazione dei pacchetti del sistema.
+          Configurazioni ufficiali dei dotfiles (<code class="text-dracula-cyan bg-dracula-bg px-1.5 py-0.5 rounded border border-dracula-selection">~/.config</code>) per Hyprland, Waybar, Syspower, sfondi desktop, Kitty, Fish shell e guida all'installazione dei pacchetti.
         </p>
       </div>
 
@@ -134,9 +145,14 @@
                 [class.border-transparent]="selectedFileId() !== file.id"
               >
                 <div class="flex flex-col min-w-0 pr-2">
-                  <span class="font-semibold text-sm truncate" [class.text-dracula-purple]="selectedFileId() === file.id" [class.text-dracula-fg]="selectedFileId() !== file.id">
-                    {{ file.title }}
-                  </span>
+                  <div class="flex items-center gap-1.5">
+                    <span class="font-semibold text-sm truncate" [class.text-dracula-purple]="selectedFileId() === file.id" [class.text-dracula-fg]="selectedFileId() !== file.id">
+                      {{ file.title }}
+                    </span>
+                    @if (fileReferencesWallpaper(file)) {
+                      <span class="text-[10px] text-dracula-pink" title="Include riferimento allo sfondo desktop">🖼️</span>
+                    }
+                  </div>
                   <span class="text-xs text-dracula-comment truncate font-mono mt-0.5">
                     {{ file.path }}
                   </span>
@@ -148,33 +164,29 @@
             }
             @if (filteredConfigFiles().length === 0) {
               <div class="p-6 text-center text-dracula-comment text-sm">
-                Nessun file trovato per "{{ searchQuery() }}"
+                Nessun file corrisponde alla ricerca "{{ searchQuery() }}".
               </div>
             }
           </div>
         </aside>
 
-        <!-- Main Code Viewer (Lg: 8 cols) -->
-        <section class="lg:col-span-8 bg-dracula-bg/90 border border-dracula-selection rounded-2xl overflow-hidden shadow-2xl flex flex-col">
-          <!-- File Viewer Header -->
-          <div class="bg-dracula-selection/40 border-b border-dracula-selection p-4 flex flex-wrap items-center justify-between gap-3">
-            <div class="flex flex-col min-w-0">
-              <div class="flex items-center gap-2">
-                <span class="font-bold text-dracula-fg text-lg">{{ selectedFile().title }}</span>
-                <span class="text-xs px-2 py-0.5 rounded bg-dracula-purple/20 text-dracula-purple border border-dracula-purple/30 uppercase font-mono">
-                  {{ selectedFile().language }}
-                </span>
-              </div>
-              <span class="text-xs font-mono text-dracula-comment mt-0.5 truncate">
-                {{ selectedFile().path }}
-              </span>
+        <!-- Main Code Viewer Area (Lg: 8 cols) -->
+        <section class="lg:col-span-8 bg-dracula-bg/90 border border-dracula-selection rounded-2xl overflow-hidden shadow-xl flex flex-col backdrop-blur-sm">
+          
+          <!-- Code Viewer Header Bar -->
+          <div class="bg-dracula-selection/40 border-b border-dracula-selection px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-dracula-red"></span>
+              <span class="w-3 h-3 rounded-full bg-dracula-orange"></span>
+              <span class="w-3 h-3 rounded-full bg-dracula-green"></span>
+              <span class="font-mono text-sm font-bold text-dracula-cyan ml-2">{{ selectedFile().title }}</span>
+              <span class="text-xs font-mono text-dracula-comment">({{ selectedFile().path }})</span>
             </div>
 
-            <!-- Action Buttons -->
             <div class="flex items-center gap-2">
               <button
                 (click)="copyToClipboard(selectedFile().path, 'path_' + selectedFile().id)"
-                class="px-3 py-1.5 rounded-lg border border-dracula-selection bg-dracula-bg/60 hover:border-dracula-cyan text-xs text-dracula-fg transition-all flex items-center gap-1.5"
+                class="px-3 py-1.5 rounded-lg border border-dracula-selection bg-dracula-selection/40 hover:bg-dracula-selection text-xs text-dracula-fg transition-colors flex items-center gap-1.5"
               >
                 <span>📋</span>
                 <span>{{ copiedState() === 'path_' + selectedFile().id ? 'Percorso Copiato!' : 'Copia Percorso' }}</span>
@@ -190,9 +202,47 @@
           </div>
 
           <!-- Description Banner -->
-          <div class="px-4 py-2 bg-dracula-selection/20 border-b border-dracula-selection text-xs text-dracula-comment">
-            {{ selectedFile().description }}
+          <div class="px-4 py-2 bg-dracula-selection/20 border-b border-dracula-selection text-xs text-dracula-comment flex items-center justify-between">
+            <span>{{ selectedFile().description }}</span>
           </div>
+
+          <!-- Linked Wallpaper Card (If this dotfile references wallpaper) -->
+          @if (fileReferencesWallpaper(selectedFile()); as wp) {
+            <div class="m-4 p-3.5 rounded-xl bg-gradient-to-r from-dracula-selection/30 to-dracula-purple/10 border border-dracula-purple/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div class="flex items-center gap-3.5">
+                <img
+                  [src]="wp.previewUrl"
+                  [alt]="wp.title"
+                  class="w-20 h-12 object-cover rounded-lg border border-dracula-purple/50 shadow-md cursor-pointer hover:scale-105 transition-transform"
+                  (click)="openWallpaperModal(wp)"
+                />
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs font-bold text-dracula-pink uppercase tracking-wider flex items-center gap-1">
+                      <span>🖼️</span> Sfondo Configurato
+                    </span>
+                    <span class="text-xs text-dracula-comment font-mono">({{ wp.fileName }})</span>
+                  </div>
+                  <p class="text-xs font-mono text-dracula-cyan mt-0.5">{{ wp.path }}</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-2 shrink-0">
+                <button
+                  (click)="openWallpaperModal(wp)"
+                  class="px-3 py-1.5 rounded-lg bg-dracula-purple/20 hover:bg-dracula-purple/30 text-dracula-purple border border-dracula-purple/40 text-xs font-semibold transition-colors flex items-center gap-1.5"
+                >
+                  <span>🔍</span>
+                  <span>Anteprima 8K</span>
+                </button>
+                <button
+                  (click)="setTab('wallpapers')"
+                  class="px-3 py-1.5 rounded-lg bg-dracula-selection/60 hover:bg-dracula-selection text-dracula-fg text-xs font-medium transition-colors"
+                >
+                  Vedi Sfondi →
+                </button>
+              </div>
+            </div>
+          }
 
           <!-- Code View Area -->
           <div class="p-4 overflow-x-auto max-h-[650px] overflow-y-auto font-mono text-xs md:text-sm leading-relaxed text-dracula-fg/90 bg-[#1e1f29]">
@@ -202,7 +252,153 @@
       </div>
     }
 
-    <!-- TAB 2: PACKAGES & REINSTALLATION COMMANDS -->
+    <!-- TAB 2: WALLPAPERS SHOWCASE & CONFIGURATION REFERENCES -->
+    @if (activeTab() === 'wallpapers') {
+      <div class="flex flex-col gap-8">
+        
+        <!-- Wallpaper Hero Showcase -->
+        <section class="bg-dracula-bg/90 border border-dracula-selection rounded-2xl p-6 md:p-8 shadow-xl flex flex-col gap-6">
+          <div>
+            <div class="flex items-center gap-2 mb-1">
+              <span class="px-2.5 py-0.5 rounded-full bg-dracula-purple/20 text-dracula-purple border border-dracula-purple/40 text-xs font-semibold uppercase tracking-wider">
+                Dracula Theme Assets
+              </span>
+            </div>
+            <h2 class="text-2xl md:text-3xl font-extrabold text-dracula-purple tracking-tight flex items-center gap-2">
+              <span>🖼️</span>
+              <span>Sfondi Desktop & Schermata di Blocco</span>
+            </h2>
+            <p class="text-sm text-dracula-comment mt-1.5 max-w-3xl">
+              Immagini ad altissima definizione utilizzate come sfondo per l'ambiente Wayland (Hyprland, Waypaper, Hyprpaper e Hyprlock).
+            </p>
+          </div>
+
+          <!-- Wallpapers Grid -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            <!-- Wallpaper Preview Column (Lg: 7 cols) -->
+            <div class="lg:col-span-7 flex flex-col gap-4">
+              <div class="relative group rounded-2xl overflow-hidden border-2 border-dracula-purple/50 bg-[#1e1f29] shadow-2xl">
+                <img
+                  [src]="selectedWallpaper().previewUrl"
+                  [alt]="selectedWallpaper().title"
+                  class="w-full h-auto max-h-[460px] object-cover transition-transform duration-500 group-hover:scale-105 cursor-pointer"
+                  (click)="openWallpaperModal(selectedWallpaper())"
+                />
+                
+                <!-- Hover Overlay with Zoom Prompt -->
+                <div
+                  (click)="openWallpaperModal(selectedWallpaper())"
+                  class="absolute inset-0 bg-dracula-bg/50 backdrop-blur-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center cursor-pointer"
+                >
+                  <span class="px-4 py-2 rounded-xl bg-dracula-purple text-dracula-bg font-bold text-sm shadow-xl flex items-center gap-2">
+                    <span>🔍</span> Clicca per Ingrandire a Schermo Intero
+                  </span>
+                </div>
+
+                <!-- Bottom Floating Info Bar -->
+                <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-dracula-bg/95 via-dracula-bg/80 to-transparent p-4 flex items-center justify-between">
+                  <div class="flex flex-col">
+                    <span class="text-sm font-bold text-dracula-fg">{{ selectedWallpaper().title }}</span>
+                    <span class="text-xs text-dracula-cyan font-mono">{{ selectedWallpaper().resolution }}</span>
+                  </div>
+                  <span class="text-xs font-mono px-2.5 py-1 rounded bg-dracula-selection text-dracula-pink font-semibold">
+                    {{ selectedWallpaper().format }}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Action Buttons Row -->
+              <div class="flex flex-wrap items-center gap-3">
+                <button
+                  (click)="openWallpaperModal(selectedWallpaper())"
+                  class="px-4 py-2 rounded-xl bg-dracula-purple text-dracula-bg font-bold text-xs md:text-sm hover:brightness-110 transition-all flex items-center gap-2 shadow-md"
+                >
+                  <span>🔍</span>
+                  <span>Anteprima Fullscreen</span>
+                </button>
+                <a
+                  [href]="selectedWallpaper().previewUrl"
+                  [download]="selectedWallpaper().fileName"
+                  class="px-4 py-2 rounded-xl bg-dracula-selection border border-dracula-selection hover:border-dracula-purple text-dracula-fg font-semibold text-xs md:text-sm transition-all flex items-center gap-2"
+                >
+                  <span>⬇️</span>
+                  <span>Scarica Immagine</span>
+                </a>
+                <button
+                  (click)="copyToClipboard(selectedWallpaper().path, 'wp_path_' + selectedWallpaper().id)"
+                  class="px-4 py-2 rounded-xl bg-dracula-selection/50 hover:bg-dracula-selection border border-dracula-selection text-dracula-comment hover:text-dracula-fg text-xs md:text-sm font-mono transition-all flex items-center gap-2"
+                >
+                  <span>📋</span>
+                  <span>{{ copiedState() === 'wp_path_' + selectedWallpaper().id ? 'Percorso Copiato!' : 'Copia ' + selectedWallpaper().path }}</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Metadata & Linked Configs Column (Lg: 5 cols) -->
+            <div class="lg:col-span-5 flex flex-col gap-6">
+
+              <!-- Linked Dotfiles Configuration References -->
+              <div class="bg-dracula-selection/20 border border-dracula-selection rounded-2xl p-5 flex flex-col gap-3">
+                <h3 class="text-sm font-bold text-dracula-cyan uppercase tracking-wider flex items-center gap-2">
+                  <span>⚙️</span> Riferimenti nelle Configurazioni
+                </h3>
+                <p class="text-xs text-dracula-comment">
+                  Questo sfondo è referenziato attivamente nei seguenti file dotfiles:
+                </p>
+
+                <div class="flex flex-col gap-2 mt-1">
+                  @for (ref of selectedWallpaper().usedBy; track ref.configPath) {
+                    <div class="flex items-center justify-between p-2.5 rounded-xl bg-dracula-bg/80 border border-dracula-selection text-xs hover:border-dracula-purple transition-all">
+                      <div class="flex flex-col min-w-0 pr-2">
+                        <span class="font-bold text-dracula-purple">{{ ref.name }}</span>
+                        <span class="font-mono text-[11px] text-dracula-comment truncate">{{ ref.configPath }}</span>
+                      </div>
+                      @if (ref.fileId) {
+                        <button
+                          (click)="selectFile(ref.fileId); setTab('dotfiles')"
+                          class="px-2.5 py-1 rounded-lg bg-dracula-selection hover:bg-dracula-purple hover:text-dracula-bg text-dracula-cyan font-semibold text-[11px] transition-colors shrink-0 flex items-center gap-1"
+                        >
+                          <span>Vedi Config</span>
+                          <span>→</span>
+                        </button>
+                      }
+                    </div>
+                  }
+                </div>
+              </div>
+
+              <!-- Quick Terminal Commands to Apply Wallpaper -->
+              <div class="bg-dracula-selection/20 border border-dracula-selection rounded-2xl p-5 flex flex-col gap-3">
+                <h3 class="text-sm font-bold text-dracula-green uppercase tracking-wider flex items-center gap-2">
+                  <span>⚡</span> Comandi Rapidi di Applicazione
+                </h3>
+                <div class="flex flex-col gap-2">
+                  @for (sc of selectedWallpaper().setupCommands; track sc.title) {
+                    <div class="flex flex-col gap-1 p-2.5 rounded-xl bg-dracula-bg/80 border border-dracula-selection text-xs">
+                      <span class="text-[11px] font-semibold text-dracula-comment">{{ sc.title }}</span>
+                      <div class="flex items-center gap-2 font-mono text-[11px] text-dracula-green bg-[#1e1f29] p-2 rounded-lg overflow-x-auto">
+                        <code class="flex-1 truncate">{{ sc.cmd }}</code>
+                        <button
+                          (click)="copyToClipboard(sc.cmd, 'cmd_' + sc.title)"
+                          class="px-2 py-0.5 rounded bg-dracula-selection hover:bg-dracula-purple hover:text-dracula-bg text-dracula-fg text-[10px] font-semibold shrink-0 transition-colors"
+                        >
+                          {{ copiedState() === 'cmd_' + sc.title ? 'Copiato!' : 'Copia' }}
+                        </button>
+                      </div>
+                    </div>
+                  }
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
+      </div>
+    }
+
+    <!-- TAB 3: PACKAGES & REINSTALLATION COMMANDS -->
     @if (activeTab() === 'packages') {
       <div class="flex flex-col gap-8">
 
@@ -276,7 +472,7 @@
       </div>
     }
 
-    <!-- TAB 3: HYPRLAND KEYBINDINGS CHEATSHEET -->
+    <!-- TAB 4: HYPRLAND KEYBINDINGS CHEATSHEET -->
     @if (activeTab() === 'keybindings') {
       <section class="bg-dracula-bg/90 border border-dracula-selection rounded-2xl p-6 md:p-8 shadow-xl flex flex-col gap-6">
         <div>
@@ -315,4 +511,55 @@
     }
 
   </main>
+
+  <!-- Fullscreen Wallpaper Lightbox Modal -->
+  @if (modalWallpaper(); as wp) {
+    <div
+      class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex flex-col items-center justify-center p-4 md:p-8 animate-fade-in"
+      (click)="closeWallpaperModal()"
+    >
+      <!-- Top Modal Bar -->
+      <div
+        class="w-full max-w-5xl flex items-center justify-between mb-3 text-dracula-fg"
+        (click)="$event.stopPropagation()"
+      >
+        <div class="flex items-center gap-3">
+          <span class="text-lg font-bold text-dracula-purple">{{ wp.title }}</span>
+          <span class="text-xs font-mono text-dracula-cyan bg-dracula-selection px-2 py-0.5 rounded">{{ wp.resolution }}</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <a
+            [href]="wp.previewUrl"
+            [download]="wp.fileName"
+            class="px-3 py-1.5 rounded-lg bg-dracula-selection hover:bg-dracula-purple hover:text-dracula-bg text-xs font-semibold transition-colors flex items-center gap-1.5"
+          >
+            <span>⬇️</span> Scarica
+          </a>
+          <button
+            (click)="closeWallpaperModal()"
+            class="w-8 h-8 rounded-lg bg-dracula-selection hover:bg-dracula-red text-dracula-fg hover:text-white flex items-center justify-center font-bold text-sm transition-colors"
+          >
+            ✕
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Full Image -->
+      <div
+        class="max-w-5xl max-h-[85vh] overflow-hidden rounded-2xl border-2 border-dracula-purple shadow-2xl flex items-center justify-center bg-dracula-bg"
+        (click)="$event.stopPropagation()"
+      >
+        <img
+          [src]="wp.previewUrl"
+          [alt]="wp.title"
+          class="max-w-full max-h-[85vh] object-contain"
+        />
+      </div>
+      
+      <!-- Footer Hint -->
+      <p class="text-xs text-dracula-comment mt-2">
+        Premi fuori dall'immagine o su ✕ per chiudere l'anteprima
+      </p>
+    </div>
+  }
 </div>
