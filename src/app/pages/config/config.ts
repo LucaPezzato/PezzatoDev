@@ -1,5 +1,4 @@
 import { Component, signal, computed } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { PezGhostBackground } from '../../components/ghost-background/ghost-background';
 import {
   CONFIG_FILES,
@@ -14,7 +13,7 @@ import {
 @Component({
   selector: 'pez-config',
   standalone: true,
-  imports: [RouterLink, PezGhostBackground],
+  imports: [PezGhostBackground],
   templateUrl: './config.html',
   styleUrl: './config.css'
 })

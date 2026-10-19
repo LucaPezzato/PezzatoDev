@@ -1,0 +1,547 @@
+<div
+  class="min-h-dvh bg-dracula-bg text-dracula-fg relative overflow-x-clip selection:bg-dracula-selection selection:text-dracula-purple flex flex-col"
+  (mousemove)="onMouseMove($event)"
+  (mouseleave)="onMouseLeave()"
+>
+  <!-- Background Animated Ghosts & Bats -->
+  <pez-ghost-background
+    [parallaxX]="bgParallaxX()"
+    [parallaxY]="bgParallaxY()"
+    [cursorX]="cursorX()"
+    [cursorY]="cursorY()"
+  ></pez-ghost-background>
+
+  <!-- Sticky Top Header -->
+  <header class="sticky top-0 z-40 bg-dracula-bg/95 backdrop-blur-md border-b border-dracula-selection px-4 sm:px-6 lg:px-8 py-2.5 sm:py-3 flex items-center justify-between gap-4 shadow-lg">
+    <!-- Brand / Title -->
+    <div class="flex items-center gap-2 sm:gap-2.5 shrink-0">
+      <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-dracula-green animate-pulse"></span>
+      <span class="font-bold text-dracula-purple tracking-wide text-base sm:text-lg lg:text-xl flex items-center gap-2">
+        <span>🎬</span>
+        <span>~/.cinema</span>
+      </span>
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="flex-1 relative z-10 max-w-7xl w-full mx-auto p-4 md:p-8 flex flex-col gap-6">
+
+    <!-- Hero / Stats Summary Banner -->
+    <section class="bg-dracula-selection/20 rounded-2xl border border-dracula-selection p-6 md:p-8 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 shadow-xl">
+      <div class="flex-1 min-w-0">
+        <h1 class="text-3xl md:text-4xl font-extrabold text-dracula-purple tracking-tight flex flex-wrap items-center gap-3">
+          <span>Diario Cinematografico</span>
+          <span class="text-xs uppercase px-2.5 py-1 rounded-md bg-dracula-purple/20 text-dracula-purple border border-dracula-purple/40">Recensioni & Voti</span>
+        </h1>
+        <p class="text-dracula-comment text-base md:text-lg mt-2 max-w-2xl">
+          Raccolta personale delle recensioni, valutazioni da 1 a 5 stelle e note sui film visti, con schede dettagliate e locandine in alta definizione.
+        </p>
+      </div>
+
+      <!-- Quick Stats Badges -->
+      <div class="flex flex-wrap items-stretch sm:items-center gap-3 w-full lg:w-auto text-center">
+        <div class="bg-dracula-bg/80 border border-dracula-selection p-3.5 rounded-xl flex-1 sm:flex-initial min-w-[110px]">
+          <div class="text-xs text-dracula-comment uppercase font-semibold">Film Visti</div>
+          <div class="text-xl font-bold text-dracula-cyan whitespace-nowrap">{{ stats().total }} Film</div>
+        </div>
+        <div class="bg-dracula-bg/80 border border-dracula-selection p-3.5 rounded-xl flex-1 sm:flex-initial min-w-[110px]">
+          <div class="text-xs text-dracula-comment uppercase font-semibold">Media Voto</div>
+          <div class="text-xl font-bold text-dracula-yellow whitespace-nowrap">★ {{ stats().avgRating }}</div>
+        </div>
+        <div class="bg-dracula-bg/80 border border-dracula-selection p-3.5 rounded-xl flex-1 sm:flex-initial min-w-[110px]">
+          <div class="text-xs text-dracula-comment uppercase font-semibold">Preferiti</div>
+          <div class="text-xl font-bold text-dracula-pink whitespace-nowrap">❤️ {{ stats().favorites }}</div>
+        </div>
+        <div class="bg-dracula-bg/80 border border-dracula-selection p-3.5 rounded-xl flex-1 sm:flex-initial min-w-[120px]">
+          <div class="text-xs text-dracula-comment uppercase font-semibold">Top Genere</div>
+          <div class="text-xl font-bold text-dracula-green whitespace-nowrap">{{ stats().topGenre }}</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Filter & Search Toolbar -->
+    <section class="bg-dracula-bg/90 border border-dracula-selection rounded-2xl p-4 md:p-5 flex flex-col gap-4 shadow-lg backdrop-blur-sm">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3 items-center">
+        
+        <!-- Search Input (Lg: 5 cols) -->
+        <div class="lg:col-span-5 relative">
+          <input
+            type="text"
+            placeholder="Cerca film per titolo, regista, anno o recensione..."
+            [value]="searchQuery()"
+            (input)="onSearch($any($event.target).value)"
+            class="w-full bg-dracula-selection/30 border border-dracula-selection rounded-xl px-4 py-2.5 text-sm text-dracula-fg placeholder-dracula-comment focus:outline-none focus:border-dracula-purple transition-colors pl-10"
+          />
+          <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-dracula-comment text-sm">🔍</span>
+          @if (searchQuery()) {
+            <button
+              (click)="onSearch('')"
+              class="absolute right-3 top-1/2 -translate-y-1/2 text-dracula-comment hover:text-dracula-fg text-xs p-1"
+            >
+              ✕
+            </button>
+          }
+        </div>
+
+        <!-- Rating Filter (Lg: 3 cols) -->
+        <div class="lg:col-span-3">
+          <select
+            [value]="selectedRating()"
+            (change)="setRating(+$any($event.target).value)"
+            class="w-full bg-dracula-selection/30 border border-dracula-selection rounded-xl px-3 py-2.5 text-sm text-dracula-fg focus:outline-none focus:border-dracula-purple transition-colors cursor-pointer"
+          >
+            <option [value]="0" class="bg-dracula-bg text-dracula-fg">Tutte le valutazioni</option>
+            <option [value]="5" class="bg-dracula-bg text-dracula-fg">★★★★★ Solo 5 Stelle</option>
+            <option [value]="4" class="bg-dracula-bg text-dracula-fg">★★★★☆ Da 4 Stelle in su</option>
+            <option [value]="3" class="bg-dracula-bg text-dracula-fg">★★★☆☆ Da 3 Stelle in su</option>
+          </select>
+        </div>
+
+        <!-- Sort By Dropdown (Lg: 3 cols) -->
+        <div class="lg:col-span-3">
+          <select
+            [value]="sortBy()"
+            (change)="setSort($any($event.target).value)"
+            class="w-full bg-dracula-selection/30 border border-dracula-selection rounded-xl px-3 py-2.5 text-sm text-dracula-fg focus:outline-none focus:border-dracula-purple transition-colors cursor-pointer"
+          >
+            <option value="watchDate-desc" class="bg-dracula-bg text-dracula-fg">Data visione (Più recenti)</option>
+            <option value="watchDate-asc" class="bg-dracula-bg text-dracula-fg">Data visione (Meno recenti)</option>
+            <option value="rating-desc" class="bg-dracula-bg text-dracula-fg">Voto (Più alto)</option>
+            <option value="year-desc" class="bg-dracula-bg text-dracula-fg">Anno di uscita</option>
+          </select>
+        </div>
+
+        <!-- View Mode Switch (Lg: 1 col) -->
+        <div class="lg:col-span-1 flex items-center justify-end gap-1">
+          <button
+            (click)="viewMode.set('grid')"
+            class="p-2.5 rounded-xl border transition-colors flex items-center justify-center text-xs"
+            [class.bg-dracula-purple]="viewMode() === 'grid'"
+            [class.text-dracula-bg]="viewMode() === 'grid'"
+            [class.border-dracula-purple]="viewMode() === 'grid'"
+            [class.border-dracula-selection]="viewMode() !== 'grid'"
+            [class.text-dracula-comment]="viewMode() !== 'grid'"
+            title="Vista Griglia Locandine"
+          >
+            🔲
+          </button>
+          <button
+            (click)="viewMode.set('list')"
+            class="p-2.5 rounded-xl border transition-colors flex items-center justify-center text-xs"
+            [class.bg-dracula-purple]="viewMode() === 'list'"
+            [class.text-dracula-bg]="viewMode() === 'list'"
+            [class.border-dracula-purple]="viewMode() === 'list'"
+            [class.border-dracula-selection]="viewMode() !== 'list'"
+            [class.text-dracula-comment]="viewMode() !== 'list'"
+            title="Vista Elenco"
+          >
+            📑
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Genre Pills Strip -->
+      <div class="flex items-center gap-1.5 overflow-x-auto scrollbar-none pt-1">
+        <button
+          (click)="setGenre('all')"
+          class="px-3 py-1 rounded-lg text-xs font-semibold transition-all shrink-0 border border-dracula-selection"
+          [class.bg-dracula-purple]="selectedGenre() === 'all'"
+          [class.text-dracula-bg]="selectedGenre() === 'all'"
+          [class.bg-dracula-selection]="selectedGenre() !== 'all'"
+          [class.text-dracula-fg]="selectedGenre() !== 'all'"
+        >
+          Tutti i Generi
+        </button>
+        @for (g of allGenres(); track g) {
+          <button
+            (click)="setGenre(g)"
+            class="px-3 py-1 rounded-lg text-xs font-medium transition-all shrink-0 border border-dracula-selection"
+            [class.bg-dracula-purple]="selectedGenre() === g"
+            [class.text-dracula-bg]="selectedGenre() === g"
+            [class.bg-dracula-selection]="selectedGenre() !== g"
+            [class.text-dracula-fg]="selectedGenre() !== g"
+          >
+            {{ g }}
+          </button>
+        }
+      </div>
+    </section>
+
+    <!-- Scroll Anchor for smooth pagination scroll -->
+    <div id="films-grid-anchor" class="scroll-mt-6"></div>
+
+    <!-- Pagination Info & Counter Bar -->
+    @if (filteredMovies().length > 0) {
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-dracula-comment border-b border-dracula-selection/40 pb-2">
+        <div class="flex items-center gap-2">
+          <span>🍿 Mostrando <strong class="text-dracula-fg">{{ showingRange().start }} - {{ showingRange().end }}</strong> di <strong class="text-dracula-purple">{{ showingRange().total }}</strong> film</span>
+          <span class="text-dracula-selection">•</span>
+          <span class="font-mono text-dracula-cyan">50 film / pagina</span>
+        </div>
+
+        @if (totalPages() > 1) {
+          <div class="flex items-center gap-2">
+            <button
+              (click)="prevPage()"
+              [disabled]="currentPage() === 1"
+              class="px-2.5 py-1 rounded-lg bg-dracula-selection/40 border border-dracula-selection hover:bg-dracula-selection disabled:opacity-30 disabled:cursor-not-allowed text-xs transition-colors"
+            >
+              ← Prec
+            </button>
+            <span class="font-mono text-dracula-fg">Pagina <strong>{{ currentPage() }}</strong> di {{ totalPages() }}</span>
+            <button
+              (click)="nextPage()"
+              [disabled]="currentPage() === totalPages()"
+              class="px-2.5 py-1 rounded-lg bg-dracula-selection/40 border border-dracula-selection hover:bg-dracula-selection disabled:opacity-30 disabled:cursor-not-allowed text-xs transition-colors"
+            >
+              Succ →
+            </button>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- Empty State -->
+    @if (filteredMovies().length === 0) {
+      <div class="bg-dracula-bg/80 border border-dracula-selection rounded-2xl p-12 text-center flex flex-col items-center justify-center gap-3">
+        <span class="text-4xl">🍿</span>
+        <h3 class="text-lg font-bold text-dracula-fg">Nessun film trovato</h3>
+        <p class="text-xs md:text-sm text-dracula-comment max-w-md">
+          Nessuna recensione corrisponde ai filtri impostati. Prova a modificare la ricerca o seleziona un altro genere.
+        </p>
+        <button
+          (click)="onSearch(''); setGenre('all'); setRating(0)"
+          class="mt-2 px-4 py-2 rounded-xl bg-dracula-selection hover:bg-dracula-purple hover:text-dracula-bg text-xs font-semibold transition-colors"
+        >
+          Reimposta tutti i filtri
+        </button>
+      </div>
+    }
+
+    <!-- GRID VIEW -->
+    @if (viewMode() === 'grid' && paginatedMovies().length > 0) {
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        @for (movie of paginatedMovies(); track movie.id) {
+          <article
+            (click)="openDetail(movie)"
+            class="group bg-dracula-bg/90 border border-dracula-selection rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:border-dracula-purple/60 transition-all duration-300 flex flex-col cursor-pointer hover:-translate-y-1"
+          >
+            <!-- Poster Image Container (2:3 Aspect Ratio) -->
+            <div class="relative aspect-[2/3] w-full overflow-hidden bg-[#1e1f29]">
+              <img
+                [src]="movie.posterUrl"
+                [alt]="movie.title"
+                loading="lazy"
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+
+              <!-- Top Floating Badges (Rating & Favorite) -->
+              <div class="absolute top-2.5 inset-x-2.5 flex items-center justify-between pointer-events-none">
+                <div class="px-2 py-1 rounded-lg bg-black/75 backdrop-blur-md border border-dracula-selection text-xs font-bold text-dracula-yellow flex items-center gap-1 shadow">
+                  <span>★</span>
+                  <span>{{ movie.rating }}</span>
+                </div>
+                @if (movie.favorite) {
+                  <span class="w-7 h-7 rounded-lg bg-dracula-pink/90 backdrop-blur-md text-dracula-bg flex items-center justify-center text-xs shadow">
+                    ❤️
+                  </span>
+                }
+              </div>
+
+              <!-- Bottom Floating Gradient Overlay with Watch Date -->
+              <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-dracula-bg via-dracula-bg/80 to-transparent p-3 pt-8 flex items-center justify-between text-xs">
+                <span class="font-mono text-dracula-cyan font-semibold">{{ movie.year }}</span>
+                @if (movie.watchDate) {
+                  <span class="text-dracula-comment font-mono text-[11px]">📅 {{ formatDate(movie.watchDate) }}</span>
+                }
+              </div>
+            </div>
+
+            <!-- Card Content Body -->
+            <div class="p-4 flex-1 flex flex-col justify-between gap-3">
+              <div>
+                <h2 class="font-bold text-base text-dracula-fg group-hover:text-dracula-purple transition-colors line-clamp-1">
+                  {{ movie.title }}
+                </h2>
+                <p class="text-xs text-dracula-comment font-medium mt-0.5 line-clamp-1">
+                  di {{ movie.director }}
+                </p>
+
+                <!-- Genres Badges -->
+                <div class="flex flex-wrap gap-1.5 mt-2.5">
+                  @for (g of movie.genres; track g) {
+                    <span class="text-[10px] px-2 py-0.5 rounded-md bg-dracula-selection/50 text-dracula-purple font-medium">
+                      {{ g }}
+                    </span>
+                  }
+                </div>
+              </div>
+
+              <!-- Review Snippet Preview (If present) -->
+              @if (movie.review) {
+                <p class="text-xs text-dracula-fg/80 italic line-clamp-3 leading-relaxed border-t border-dracula-selection/40 pt-2.5 mt-1">
+                  "{{ movie.review }}"
+                </p>
+              }
+            </div>
+          </article>
+        }
+      </div>
+    }
+
+    <!-- LIST VIEW -->
+    @if (viewMode() === 'list' && paginatedMovies().length > 0) {
+      <div class="flex flex-col gap-4">
+        @for (movie of paginatedMovies(); track movie.id) {
+          <article
+            (click)="openDetail(movie)"
+            class="group bg-dracula-bg/90 border border-dracula-selection rounded-2xl overflow-hidden p-4 shadow-lg hover:border-dracula-purple transition-all flex flex-col sm:flex-row gap-4 items-start sm:items-center cursor-pointer"
+          >
+            <!-- Thumbnail Poster -->
+            <img
+              [src]="movie.posterUrl"
+              [alt]="movie.title"
+              loading="lazy"
+              class="w-20 sm:w-24 aspect-[2/3] object-cover rounded-xl border border-dracula-selection shrink-0 group-hover:scale-105 transition-transform"
+            />
+
+            <!-- Info & Review -->
+            <div class="flex-1 min-w-0 flex flex-col gap-1.5">
+              <div class="flex flex-wrap items-baseline justify-between gap-2">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <h2 class="font-bold text-lg text-dracula-fg group-hover:text-dracula-purple transition-colors">
+                    {{ movie.title }}
+                  </h2>
+                  <span class="text-xs font-mono text-dracula-comment">({{ movie.year }})</span>
+                  @if (movie.favorite) {
+                    <span class="text-xs text-dracula-pink">❤️ Preferito</span>
+                  }
+                </div>
+
+                <!-- Stars Rating -->
+                <div class="flex items-center gap-1 text-dracula-yellow text-sm font-bold bg-dracula-selection/30 px-2.5 py-1 rounded-lg border border-dracula-selection">
+                  <span>★</span>
+                  <span>{{ movie.rating }} / 5</span>
+                </div>
+              </div>
+
+              <p class="text-xs text-dracula-cyan font-medium">
+                Regia: {{ movie.director }}
+                @if (movie.durationMinutes) {
+                  <span class="text-dracula-comment font-mono ml-2">• {{ movie.durationMinutes }} min</span>
+                }
+                @if (movie.watchDate) {
+                  <span class="text-dracula-comment font-mono ml-2">• Visto il {{ formatDate(movie.watchDate) }}</span>
+                }
+              </p>
+
+              <!-- Review quote (If present) -->
+              @if (movie.review) {
+                <p class="text-xs md:text-sm text-dracula-fg/90 italic line-clamp-2 mt-1">
+                  "{{ movie.review }}"
+                </p>
+              }
+
+              <!-- Genres -->
+              <div class="flex flex-wrap gap-1.5 mt-1">
+                @for (g of movie.genres; track g) {
+                  <span class="text-[10px] px-2 py-0.5 rounded bg-dracula-selection/60 text-dracula-comment font-mono">
+                    {{ g }}
+                  </span>
+                }
+              </div>
+            </div>
+          </article>
+        }
+      </div>
+    }
+
+    <!-- Bottom Full Pagination Navigation -->
+    @if (totalPages() > 1) {
+      <div class="flex flex-wrap items-center justify-center gap-2 pt-6 pb-2">
+        <button
+          (click)="prevPage()"
+          [disabled]="currentPage() === 1"
+          class="px-4 py-2 rounded-xl bg-dracula-selection/40 border border-dracula-selection hover:bg-dracula-purple hover:text-dracula-bg disabled:opacity-30 disabled:pointer-events-none text-xs font-semibold transition-all"
+        >
+          ← Precedente
+        </button>
+
+        <div class="flex items-center gap-1">
+          @for (page of pageNumbers(); track page) {
+            <button
+              (click)="goToPage(page)"
+              class="w-9 h-9 rounded-xl border text-xs font-bold font-mono transition-all flex items-center justify-center hover:border-dracula-purple"
+              [class.bg-dracula-purple]="currentPage() === page"
+              [class.text-dracula-bg]="currentPage() === page"
+              [class.border-dracula-purple]="currentPage() === page"
+              [class.bg-dracula-selection]="currentPage() !== page"
+              [class.border-dracula-selection]="currentPage() !== page"
+              [class.text-dracula-fg]="currentPage() !== page"
+            >
+              {{ page }}
+            </button>
+          }
+        </div>
+
+        <button
+          (click)="nextPage()"
+          [disabled]="currentPage() === totalPages()"
+          class="px-4 py-2 rounded-xl bg-dracula-selection/40 border border-dracula-selection hover:bg-dracula-purple hover:text-dracula-bg disabled:opacity-30 disabled:pointer-events-none text-xs font-semibold transition-all"
+        >
+          Successiva →
+        </button>
+      </div>
+    }
+
+  </main>
+
+  <!-- MODAL 1: FULL MOVIE DETAIL & REVIEW -->
+  @if (selectedMovie(); as movie) {
+    <div
+      class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 md:p-8 animate-fade-in"
+      (click)="closeDetail()"
+    >
+      <div
+        class="bg-dracula-bg border-2 border-dracula-purple/60 rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl relative flex flex-col text-dracula-fg"
+        (click)="$event.stopPropagation()"
+      >
+        <!-- Header Backdrop (If Available) -->
+        @if (movie.backdropUrl) {
+          <div class="relative h-44 sm:h-56 w-full overflow-hidden">
+            <img
+              [src]="movie.backdropUrl"
+              [alt]="movie.title"
+              class="w-full h-full object-cover"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-dracula-bg via-dracula-bg/50 to-transparent"></div>
+          </div>
+        }
+
+        <!-- Close Button -->
+        <button
+          (click)="closeDetail()"
+          class="absolute top-4 right-4 z-20 w-8 h-8 rounded-full bg-dracula-bg/80 hover:bg-dracula-red text-dracula-fg hover:text-white flex items-center justify-center font-bold text-sm transition-colors border border-dracula-selection"
+        >
+          ✕
+        </button>
+
+        <!-- Body Details -->
+        <div class="p-6 md:p-8 flex flex-col md:flex-row gap-6 -mt-16 sm:-mt-20 relative z-10">
+          
+          <!-- Poster Column (Shrink 0) -->
+          <div class="w-32 sm:w-44 shrink-0 mx-auto md:mx-0">
+            <img
+              [src]="movie.posterUrl"
+              [alt]="movie.title"
+              class="w-full aspect-[2/3] object-cover rounded-xl shadow-2xl border-2 border-dracula-purple/50"
+            />
+          </div>
+
+          <!-- Info & Review Text -->
+          <div class="flex-1 min-w-0 flex flex-col gap-4">
+            <div>
+              <div class="flex items-center gap-2 flex-wrap">
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-dracula-fg">
+                  {{ movie.title }}
+                </h2>
+                @if (movie.favorite) {
+                  <span class="text-xs px-2.5 py-0.5 rounded-full bg-dracula-pink/20 text-dracula-pink border border-dracula-pink/40 font-semibold">
+                    ❤️ Preferito
+                  </span>
+                }
+              </div>
+
+              @if (movie.originalTitle && movie.originalTitle !== movie.title) {
+                <p class="text-xs font-mono text-dracula-comment italic mt-0.5">
+                  Titolo originale: {{ movie.originalTitle }}
+                </p>
+              }
+
+              <!-- Rating Stars Large Display -->
+              <div class="flex items-center gap-3 mt-3">
+                <div class="flex items-center gap-1 text-dracula-yellow text-lg">
+                  @for (star of getStarArray(movie.rating); track $index) {
+                    <span>{{ star.full ? '★' : star.half ? '⯨' : '☆' }}</span>
+                  }
+                </div>
+                <span class="text-sm font-bold text-dracula-yellow font-mono">
+                  {{ movie.rating }} / 5
+                </span>
+              </div>
+
+              <div class="grid grid-cols-2 gap-2 mt-3 text-xs font-mono">
+                <div class="p-2 rounded-lg bg-dracula-selection/20 border border-dracula-selection">
+                  <span class="text-dracula-comment block text-[10px] uppercase">Regia</span>
+                  <span class="text-dracula-cyan font-bold">{{ movie.director }}</span>
+                </div>
+                <div class="p-2 rounded-lg bg-dracula-selection/20 border border-dracula-selection">
+                  <span class="text-dracula-comment block text-[10px] uppercase">Anno & Durata</span>
+                  <span class="text-dracula-green font-bold">{{ movie.year }} @if (movie.durationMinutes) { • {{ movie.durationMinutes }} min }</span>
+                </div>
+                <div class="p-2 rounded-lg bg-dracula-selection/20 border border-dracula-selection col-span-2">
+                  <span class="text-dracula-comment block text-[10px] uppercase">Data di Visione</span>
+                  @if (movie.watchDate) {
+                    <span class="text-dracula-pink font-semibold">📅 {{ formatDate(movie.watchDate) }}</span>
+                  } @else {
+                    <span class="text-dracula-comment font-medium">Non registrata</span>
+                  }
+                </div>
+              </div>
+            </div>
+
+            <!-- Review Body (If Present) -->
+            @if (movie.review) {
+              <div class="bg-[#1e1f29] border border-dracula-selection rounded-xl p-4 md:p-5">
+                <h3 class="text-xs font-bold text-dracula-purple uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                  <span>📝</span> Recensione Personale
+                </h3>
+                <p class="text-sm leading-relaxed text-dracula-fg/90 italic">
+                  "{{ movie.review }}"
+                </p>
+              </div>
+            }
+
+            <!-- Genres & Tags -->
+            <div class="flex flex-wrap gap-2 items-center">
+              @for (g of movie.genres; track g) {
+                <span class="px-2.5 py-1 rounded-lg bg-dracula-selection text-dracula-purple text-xs font-semibold">
+                  {{ g }}
+                </span>
+              }
+              @for (tag of movie.tags || []; track tag) {
+                <span class="px-2.5 py-1 rounded-lg bg-dracula-selection/40 text-dracula-comment text-xs font-mono">
+                  #{{ tag }}
+                </span>
+              }
+            </div>
+
+            <!-- Action buttons in modal -->
+            <div class="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-dracula-selection">
+              @if (movie.imdbUrl) {
+                <a
+                  [href]="movie.imdbUrl"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="px-3.5 py-1.5 rounded-xl bg-dracula-selection hover:bg-dracula-purple hover:text-dracula-bg text-xs font-semibold transition-colors flex items-center gap-1.5"
+                >
+                  <span>🔗</span> Scheda IMDb
+                </a>
+              }
+              <button
+                (click)="copyJsonSnippet(movie, 'single_' + movie.id)"
+                class="px-3.5 py-1.5 rounded-xl bg-dracula-selection/50 hover:bg-dracula-selection text-xs font-mono text-dracula-fg transition-colors flex items-center gap-1.5 ml-auto"
+              >
+                <span>📋</span>
+                <span>{{ copiedState() === 'single_' + movie.id ? 'JSON Copiato!' : 'Copia JSON' }}</span>
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+</div>
