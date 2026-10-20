@@ -112,19 +112,20 @@ export class PezConfig {
 
   // Hyprland Keybindings cheatsheet
   keybindings = [
-    { mod: 'SUPER', key: 'Q', action: 'Lancia Terminale Kitty' },
-    { mod: 'SUPER', key: 'R', action: 'Lancia Application Launcher (Fuzzel)' },
-    { mod: 'SUPER', key: 'C', action: 'Chiudi finestra attiva' },
+    { mod: 'SUPER', key: 'Return', action: 'Lancia Terminale Kitty' },
+    { mod: 'SUPER', key: 'D', action: 'Lancia Application Launcher (Fuzzel)' },
+    { mod: 'SUPER', key: 'Q', action: 'Chiudi finestra attiva' },
     { mod: 'SUPER', key: 'E', action: 'Apri File Manager (Nautilus)' },
     { mod: 'SUPER', key: 'V', action: 'Apri Clipboard Manager (Clipse)' },
-    { mod: 'SUPER + SHIFT', key: 'S', action: 'Screenshot area con Hyprshot' },
+    { mod: 'SUPER + CTRL', key: 'S', action: 'Screenshot area con Hyprshot' },
     { mod: 'SUPER', key: 'L', action: 'Blocca Schermo (Hyprlock)' },
-    { mod: 'SUPER', key: 'M', action: 'Esci da Hyprland' },
+    { mod: 'SUPER', key: 'G / TAB', action: 'Raggruppa finestre in Tab / Cambia Tab' },
+    { mod: 'Waybar Pill', key: '󰎆 YT Music', action: 'Apri YouTube Music TUI (yt-music-tui)' },
     { mod: 'Waybar Button', key: '', action: 'Apri Menu Spegnimento (Syspower)' },
     { mod: 'SUPER', key: 'F', action: 'Attiva / Disattiva Fullscreen' },
     { mod: 'SUPER', key: 'Space', action: 'Toggle Floating Window' },
     { mod: 'SUPER', key: 'Left / Right / Up / Down', action: 'Sposta focus tra finestre' },
-    { mod: 'SUPER', key: '1 .. 10', action: 'Passa al Workspace 1 - 10' },
-    { mod: 'SUPER + SHIFT', key: '1 .. 10', action: 'Sposta finestra nel Workspace 1 - 10' }
+    { mod: 'SUPER', key: '1 .. 0', action: 'Passa al Workspace 1 - 10' },
+    { mod: 'SUPER + SHIFT', key: '1 .. 0', action: 'Sposta finestra nel Workspace 1 - 10' }
   ];
 }
