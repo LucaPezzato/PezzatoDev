@@ -18,6 +18,25 @@ export interface MovieReview {
 
 export const MOVIE_REVIEWS: MovieReview[] = [
   {
+    "id": "clayface-2026",
+    "title": "Clayface",
+    "year": 2026,
+    "director": "James Watkins",
+    "genres": [
+      "Horror",
+      "Thriller",
+      "Fantascienza"
+    ],
+    "durationMinutes": 109,
+    "posterUrl": "https://image.tmdb.org/t/p/w500/t6snh7pOxNjqs5rwP28TZmTQ0Ul.jpg",
+    "backdropUrl": "https://image.tmdb.org/t/p/w1280/uL4cIrNi2uaUnWIOQQ28EVnkETG.jpg",
+    "imdbUrl": "https://www.imdb.com/title/tt34890576/",
+    "rating": 4,
+    "watchDate": "2026-10-25",
+    "favorite": true,
+    "review": "Visione cinematografica notevole."
+  },
+  {
     "id": "l-estranea-2026",
     "title": "L'estranea",
     "year": 2026,
