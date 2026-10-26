@@ -201,9 +201,9 @@ async function main() {
     const favStr = await ask(`${c.yellow}❤️ Segnare come Preferito? (s/N) [Default: n]: ${c.reset}`);
     movie.favorite = favStr.toLowerCase().startsWith('s') || favStr.toLowerCase().startsWith('y');
 
-    console.log(`${c.yellow}📝 Scrivi la tua recensione (premi Invio per confermare):${c.reset}`);
+    console.log(`${c.yellow}📝 Scrivi la tua recensione (opzionale, premi Invio per saltare):${c.reset}`);
     const reviewStr = await ask('> ');
-    movie.review = reviewStr.trim() || 'Visione cinematografica notevole.';
+    movie.review = reviewStr.trim();
 
     const tagsStr = await ask(`${c.yellow}🏷️ Tag opzionali (separati da virgola, es. IMAX, Capolavoro, Sci-Fi): ${c.reset}`);
     if (tagsStr.trim()) {

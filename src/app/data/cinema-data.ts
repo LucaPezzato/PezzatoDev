@@ -34,7 +34,7 @@ export const MOVIE_REVIEWS: MovieReview[] = [
     "rating": 4,
     "watchDate": "2026-10-25",
     "favorite": true,
-    "review": "Visione cinematografica notevole."
+    "review": ""
   },
   {
     "id": "l-estranea-2026",
@@ -52,7 +52,7 @@ export const MOVIE_REVIEWS: MovieReview[] = [
     "rating": 4,
     "watchDate": "2026-10-19",
     "favorite": false,
-    "review": "Visione cinematografica notevole."
+    "review": ""
   },
   {
     "id": "spider-man-brand-new-day-2026",
