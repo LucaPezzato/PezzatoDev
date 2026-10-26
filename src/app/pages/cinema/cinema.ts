@@ -17,7 +17,9 @@ export class PezCinema {
   selectedGenre = signal<string>('all');
   selectedRating = signal<number>(0);
   sortBy = signal<'watchDate-desc' | 'watchDate-asc' | 'rating-desc' | 'year-desc'>('watchDate-desc');
-  viewMode = signal<'grid' | 'list'>('grid');
+  viewMode = signal<'grid' | 'list'>(
+    typeof window !== 'undefined' && window.innerWidth < 768 ? 'list' : 'grid'
+  );
 
   selectedMovie = signal<MovieReview | null>(null);
   copiedState = signal<string | null>(null);
