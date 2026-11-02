@@ -1,19 +1,25 @@
 #!/usr/bin/env node
 
 /**
- * CLI script to automatically fetch movie metadata and poster/backdrop images from TMDb
- * and insert the new review directly into src/app/data/cinema-data.ts.
+ * CLI script to automatically fetch movie metadata and poster/backdrop images from TMDb,
+ * insert the new review directly into src/app/data/cinema-data.ts,
+ * and automatically create a git commit and push to remote.
  *
  * Usage:
  *   npm run add-movie
  *   npm run add-movie "Interstellar"
  *   npm run add-movie tt0816692
  *   npm run add-movie 157336
+ *
+ * Flags:
+ *   --no-push    Skip git push
+ *   --no-commit  Skip git commit and push
  */
 
 import fs from 'node:fs';
 import path from 'node:path';
 import readline from 'node:readline';
+import { execSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -166,7 +172,10 @@ async function main() {
   try {
     const apiKey = await getApiKey();
 
-    let query = process.argv.slice(2).join(' ').trim();
+    const args = process.argv.slice(2);
+    const noCommit = args.includes('--no-commit');
+    const noPush = args.includes('--no-push');
+    let query = args.filter((arg) => !arg.startsWith('--')).join(' ').trim();
     if (!query) {
       query = await ask(`${c.cyan}Inserisci Titolo, ID TMDb o ID IMDb (es. tt0816692 o Inception): ${c.reset}`);
     }
@@ -241,6 +250,30 @@ async function main() {
 
     console.log(`${c.green}🎉 Recensione aggiunta con successo a cinema-data.ts!${c.reset}`);
     console.log(`${c.cyan}Visita http://localhost:4200/cinema o esegui 'npm start' per vederla subito.${c.reset}\n`);
+
+    // 4. Git add, commit e push automatico
+    if (noCommit) {
+      console.log(`${c.gray}Commit saltato (--no-commit specificato).${c.reset}\n`);
+    } else {
+      console.log(`${c.purple}----------------------------------------${c.reset}`);
+      console.log(`${c.gray}Esecuzione git commit automatico...${c.reset}`);
+      try {
+        const commitMsg = `Aggiunta recensione ${movie.title} (${movie.year}) nella sezione cinema`;
+        execSync(`git add "${CINEMA_DATA_FILE}"`, { cwd: ROOT_DIR, stdio: 'inherit' });
+        execSync(`git commit -m ${JSON.stringify(commitMsg)}`, { cwd: ROOT_DIR, stdio: 'inherit' });
+        console.log(`${c.green}✓ Commit completato: "${commitMsg}"${c.reset}`);
+
+        if (noPush) {
+          console.log(`${c.gray}Push saltato (--no-push specificato).${c.reset}\n`);
+        } else {
+          console.log(`${c.gray}Esecuzione git push...${c.reset}`);
+          execSync('git push', { cwd: ROOT_DIR, stdio: 'inherit' });
+          console.log(`${c.green}🚀 Push completato con successo!${c.reset}\n`);
+        }
+      } catch (gitErr) {
+        console.error(`\n${c.yellow}⚠️  Attenzione: operazione Git non completata: ${gitErr.message}${c.reset}\n`);
+      }
+    }
   } catch (err) {
     console.error(`\n${c.red}❌ Errore: ${err.message}${c.reset}\n`);
   } finally {
