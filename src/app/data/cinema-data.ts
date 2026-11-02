@@ -18,6 +18,25 @@ export interface MovieReview {
 
 export const MOVIE_REVIEWS: MovieReview[] = [
   {
+    "id": "ice-cream-man-2026",
+    "title": "Ice Cream Man",
+    "year": 2026,
+    "director": "Eli Roth",
+    "genres": [
+      "Horror",
+      "Commedia",
+      "Thriller"
+    ],
+    "durationMinutes": 86,
+    "posterUrl": "https://image.tmdb.org/t/p/w500/bnZUCOLv2Br3VOxnDMo5qPOncJF.jpg",
+    "backdropUrl": "https://image.tmdb.org/t/p/w1280/3DV7c9FoogMORFGUFDbTcCtzxOr.jpg",
+    "imdbUrl": "https://www.imdb.com/title/tt36893729/",
+    "rating": 1,
+    "watchDate": "2026-11-02",
+    "favorite": false,
+    "review": "Venduto come horror, rivelatosi la miglior commedia demenziale dell'anno. Recitazione da recita parrocchiale, trama senza il minimo senso logico ed effetti speciali fatti col cartoncino: faceva talmente schifo che ho riso per novanta minuti di fila."
+  },
+  {
     "id": "clayface-2026",
     "title": "Clayface",
     "year": 2026,
