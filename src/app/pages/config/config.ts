@@ -121,6 +121,8 @@ export class PezConfig {
     { mod: 'SUPER', key: 'L', action: 'Blocca Schermo (Hyprlock)' },
     { mod: 'SUPER', key: 'G / TAB', action: 'Raggruppa finestre in Tab / Cambia Tab' },
     { mod: 'Waybar Pill', key: '󰎆 YT Music', action: 'Apri YouTube Music TUI (yt-music-tui)' },
+    { mod: 'Waybar Pill', key: '󰕃 Twitch', action: 'Apri Twitch TUI / Toggle Live Stream (twitch-tui)' },
+    { mod: 'Waybar Pill', key: '󰎚 Post-it', action: 'Apri Post-it TUI / Toggle Desktop Sticky Notes (postit-tui)' },
     { mod: 'Waybar Button', key: '', action: 'Apri Menu Spegnimento (Syspower)' },
     { mod: 'SUPER', key: 'F', action: 'Attiva / Disattiva Fullscreen' },
     { mod: 'SUPER', key: 'Space', action: 'Toggle Floating Window' },

@@ -11,95 +11,89 @@
     [cursorY]="cursorY()"
   ></pez-ghost-background>
 
-  <!-- Top Navigation Header -->
-  <header class="sticky top-0 z-50 bg-dracula-bg/95 backdrop-blur-md border-b border-dracula-selection px-3 sm:px-6 lg:px-8 py-2.5 sm:py-3 flex flex-col lg:flex-row lg:items-center justify-between gap-2.5 lg:gap-4 shadow-lg">
-    <!-- Current Page Brand -->
-    <div class="flex items-center gap-2 sm:gap-2.5 shrink-0">
-      <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-dracula-green animate-pulse"></span>
-      <span class="font-bold text-dracula-purple tracking-wide text-base sm:text-lg lg:text-xl">~/.config</span>
-    </div>
-
-    <!-- Navigation Tabs (Clean 2nd row on mobile/tablet portrait, inline on desktop) -->
-    <div class="flex items-center bg-dracula-selection/40 p-0.5 sm:p-1 rounded-xl border border-dracula-selection text-xs sm:text-sm font-medium overflow-x-auto max-w-full w-full lg:w-auto scrollbar-none">
-      <button
-        (click)="setTab('dotfiles')"
-        class="px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-lg transition-all duration-200 flex items-center justify-center gap-1.5 flex-1 lg:flex-initial shrink-0"
-        [class.bg-dracula-purple]="activeTab() === 'dotfiles'"
-        [class.text-dracula-bg]="activeTab() === 'dotfiles'"
-        [class.font-semibold]="activeTab() === 'dotfiles'"
-        [class.text-dracula-fg]="activeTab() !== 'dotfiles'"
-      >
-        <span>📄</span>
-        <span>Dotfiles</span>
-      </button>
-      <button
-        (click)="setTab('wallpapers')"
-        class="px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-lg transition-all duration-200 flex items-center justify-center gap-1.5 flex-1 lg:flex-initial shrink-0"
-        [class.bg-dracula-purple]="activeTab() === 'wallpapers'"
-        [class.text-dracula-bg]="activeTab() === 'wallpapers'"
-        [class.font-semibold]="activeTab() === 'wallpapers'"
-        [class.text-dracula-fg]="activeTab() !== 'wallpapers'"
-      >
-        <span>🖼️</span>
-        <span class="hidden sm:inline">Wallpapers</span>
-        <span class="sm:hidden">Sfondi</span>
-      </button>
-      <button
-        (click)="setTab('packages')"
-        class="px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-lg transition-all duration-200 flex items-center justify-center gap-1.5 flex-1 lg:flex-initial shrink-0"
-        [class.bg-dracula-purple]="activeTab() === 'packages'"
-        [class.text-dracula-bg]="activeTab() === 'packages'"
-        [class.font-semibold]="activeTab() === 'packages'"
-        [class.text-dracula-fg]="activeTab() !== 'packages'"
-      >
-        <span>📦</span>
-        <span class="hidden sm:inline">Pacchetti & Setup</span>
-        <span class="sm:hidden">Pacchetti</span>
-      </button>
-      <button
-        (click)="setTab('keybindings')"
-        class="px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-lg transition-all duration-200 flex items-center justify-center gap-1.5 flex-1 lg:flex-initial shrink-0"
-        [class.bg-dracula-purple]="activeTab() === 'keybindings'"
-        [class.text-dracula-bg]="activeTab() === 'keybindings'"
-        [class.font-semibold]="activeTab() === 'keybindings'"
-        [class.text-dracula-fg]="activeTab() !== 'keybindings'"
-      >
-        <span>⌨️</span>
-        <span class="hidden sm:inline">Keybindings</span>
-        <span class="sm:hidden">Tasti</span>
-      </button>
-    </div>
-  </header>
-
-  <!-- Main Content Container -->
-  <main class="flex-1 relative z-10 max-w-7xl w-full mx-auto p-4 md:p-8 flex flex-col gap-6">
+  <!-- Main Content Container (padded for top Waybar) -->
+  <main class="flex-1 relative z-10 max-w-7xl w-full mx-auto px-4 pt-12 pb-8 md:px-8 md:pt-14 flex flex-col gap-6">
 
     <!-- Hero / Title Banner -->
-    <section class="bg-dracula-selection/20 rounded-2xl border border-dracula-selection p-6 md:p-8 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 shadow-xl">
-      <div class="flex-1 min-w-0">
-        <h1 class="text-3xl md:text-4xl font-extrabold text-dracula-purple tracking-tight flex flex-wrap items-center gap-3">
-          <span>Linux Configurations</span>
-          <span class="text-xs uppercase px-2.5 py-1 rounded-md bg-dracula-purple/20 text-dracula-purple border border-dracula-purple/40">Arch + Hyprland</span>
-        </h1>
-        <p class="text-dracula-comment text-base md:text-lg mt-2 max-w-2xl">
-          Configurazioni ufficiali dei dotfiles (<code class="text-dracula-cyan bg-dracula-bg px-1.5 py-0.5 rounded border border-dracula-selection">~/.config</code>) per Hyprland, Waybar, Syspower, sfondi desktop, Kitty, Fish shell e guida all'installazione dei pacchetti.
-        </p>
+    <section class="bg-dracula-selection/20 rounded-2xl border border-dracula-selection p-6 md:p-8 flex flex-col gap-6 shadow-xl">
+      <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
+        <div class="flex-1 min-w-0">
+          <h1 class="text-3xl md:text-4xl font-extrabold text-dracula-purple tracking-tight flex flex-wrap items-center gap-3">
+            <span>Linux Configurations</span>
+            <span class="text-xs uppercase px-2.5 py-1 rounded-md bg-dracula-purple/20 text-dracula-purple border border-dracula-purple/40">Arch + Hyprland</span>
+          </h1>
+          <p class="text-dracula-comment text-base md:text-lg mt-2 max-w-2xl">
+            Configurazioni ufficiali dei dotfiles (<code class="text-dracula-cyan bg-dracula-bg px-1.5 py-0.5 rounded border border-dracula-selection">~/.config</code>) per Hyprland, Waybar, Syspower, sfondi desktop, Kitty, Fish shell e guida all'installazione dei pacchetti.
+          </p>
+        </div>
+
+        <!-- Quick Stats Badges -->
+        <div class="flex flex-wrap items-stretch sm:items-center gap-3 w-full lg:w-auto text-center">
+          <div class="bg-dracula-bg/80 border border-dracula-selection p-3.5 rounded-xl flex-1 sm:flex-initial min-w-[120px]">
+            <div class="text-xs text-dracula-comment uppercase font-semibold">Dotfiles</div>
+            <div class="text-xl font-bold text-dracula-cyan whitespace-nowrap">{{ configFiles.length }} File</div>
+          </div>
+          <div class="bg-dracula-bg/80 border border-dracula-selection p-3.5 rounded-xl flex-1 sm:flex-initial min-w-[150px]">
+            <div class="text-xs text-dracula-comment uppercase font-semibold">WM / Compositor</div>
+            <div class="text-xl font-bold text-dracula-green whitespace-nowrap">Hyprland (Lua)</div>
+          </div>
+          <div class="bg-dracula-bg/80 border border-dracula-selection p-3.5 rounded-xl flex-1 sm:flex-initial min-w-[120px]">
+            <div class="text-xs text-dracula-comment uppercase font-semibold">Shell</div>
+            <div class="text-xl font-bold text-dracula-orange whitespace-nowrap">Fish Shell</div>
+          </div>
+        </div>
       </div>
 
-      <!-- Quick Stats Badges -->
-      <div class="flex flex-wrap items-stretch sm:items-center gap-3 w-full lg:w-auto text-center">
-        <div class="bg-dracula-bg/80 border border-dracula-selection p-3.5 rounded-xl flex-1 sm:flex-initial min-w-[120px]">
-          <div class="text-xs text-dracula-comment uppercase font-semibold">Dotfiles</div>
-          <div class="text-xl font-bold text-dracula-cyan whitespace-nowrap">{{ configFiles.length }} File</div>
-        </div>
-        <div class="bg-dracula-bg/80 border border-dracula-selection p-3.5 rounded-xl flex-1 sm:flex-initial min-w-[150px]">
-          <div class="text-xs text-dracula-comment uppercase font-semibold">WM / Compositor</div>
-          <div class="text-xl font-bold text-dracula-green whitespace-nowrap">Hyprland (Lua)</div>
-        </div>
-        <div class="bg-dracula-bg/80 border border-dracula-selection p-3.5 rounded-xl flex-1 sm:flex-initial min-w-[120px]">
-          <div class="text-xs text-dracula-comment uppercase font-semibold">Shell</div>
-          <div class="text-xl font-bold text-dracula-orange whitespace-nowrap">Fish Shell</div>
-        </div>
+      <!-- Waybar-styled Internal Section Tabs -->
+      <div class="bg-[#1e1f29]/94 border border-[#44475a] rounded-[10px] px-1.5 py-1 flex items-center overflow-x-auto max-w-full w-fit scrollbar-none shadow-md">
+        <button
+          (click)="setTab('dotfiles')"
+          class="px-3 py-1 m-0.5 rounded-[7px] font-mono text-[13px] font-bold transition-all duration-150 flex items-center justify-center gap-1.5 shrink-0 cursor-pointer"
+          [class.bg-[#bd93f9]]="activeTab() === 'dotfiles'"
+          [class.text-[#1e1f29]]="activeTab() === 'dotfiles'"
+          [class.text-[#6272a4]]="activeTab() !== 'dotfiles'"
+          [class.hover:text-[#f8f8f2]]="activeTab() !== 'dotfiles'"
+          [class.hover:bg-[#44475a]]="activeTab() !== 'dotfiles'"
+        >
+          <span>📄</span>
+          <span>Dotfiles</span>
+        </button>
+        <button
+          (click)="setTab('wallpapers')"
+          class="px-3 py-1 m-0.5 rounded-[7px] font-mono text-[13px] font-bold transition-all duration-150 flex items-center justify-center gap-1.5 shrink-0 cursor-pointer"
+          [class.bg-[#bd93f9]]="activeTab() === 'wallpapers'"
+          [class.text-[#1e1f29]]="activeTab() === 'wallpapers'"
+          [class.text-[#6272a4]]="activeTab() !== 'wallpapers'"
+          [class.hover:text-[#f8f8f2]]="activeTab() !== 'wallpapers'"
+          [class.hover:bg-[#44475a]]="activeTab() !== 'wallpapers'"
+        >
+          <span>🖼️</span>
+          <span>Wallpapers</span>
+        </button>
+        <button
+          (click)="setTab('packages')"
+          class="px-3 py-1 m-0.5 rounded-[7px] font-mono text-[13px] font-bold transition-all duration-150 flex items-center justify-center gap-1.5 shrink-0 cursor-pointer"
+          [class.bg-[#bd93f9]]="activeTab() === 'packages'"
+          [class.text-[#1e1f29]]="activeTab() === 'packages'"
+          [class.text-[#6272a4]]="activeTab() !== 'packages'"
+          [class.hover:text-[#f8f8f2]]="activeTab() !== 'packages'"
+          [class.hover:bg-[#44475a]]="activeTab() !== 'packages'"
+        >
+          <span>📦</span>
+          <span>Pacchetti & Setup</span>
+        </button>
+        <button
+          (click)="setTab('keybindings')"
+          class="px-3 py-1 m-0.5 rounded-[7px] font-mono text-[13px] font-bold transition-all duration-150 flex items-center justify-center gap-1.5 shrink-0 cursor-pointer"
+          [class.bg-[#bd93f9]]="activeTab() === 'keybindings'"
+          [class.text-[#1e1f29]]="activeTab() === 'keybindings'"
+          [class.text-[#6272a4]]="activeTab() !== 'keybindings'"
+          [class.hover:text-[#f8f8f2]]="activeTab() !== 'keybindings'"
+          [class.hover:bg-[#44475a]]="activeTab() !== 'keybindings'"
+        >
+          <span>⌨️</span>
+          <span>Keybindings</span>
+        </button>
       </div>
     </section>
 

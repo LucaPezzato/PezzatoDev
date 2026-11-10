@@ -1,0 +1,303 @@
+<header class="waybar-bar relative">
+  <!-- MODULES LEFT: hyprland/workspaces (Portal Menus), custom/ytmusic, custom/twitch, custom/postit -->
+  <div class="flex items-center min-w-0 sm:justify-self-start">
+    <!-- #workspaces (Portal Navigation Tabs - Always Visible) -->
+    <nav aria-label="Workspaces del portale" class="waybar-island workspaces-island shrink-0">
+      <a
+        routerLink="/"
+        class="ws-btn"
+        [class.active]="isHomeActive()"
+        title="Workspace 1: Business Card & CV"
+      >
+        <span>~/home</span>
+      </a>
+      <a
+        routerLink="/config"
+        class="ws-btn"
+        [class.active]="isConfigActive()"
+        title="Workspace 2: Linux Dotfiles & Setup"
+      >
+        <span>~/.config</span>
+      </a>
+      <a
+        routerLink="/cinema"
+        class="ws-btn"
+        [class.active]="isCinemaActive()"
+        title="Workspace 3: Diario Cinematografico"
+      >
+        <span>~/.cinema</span>
+      </a>
+    </nav>
+
+    <!-- #custom-ytmusic (Appears >= 1060px) -->
+    <div class="waybar-tooltip-wrapper wb-show-1060">
+      <a
+        href="https://github.com/LucaPezzato/yt-music-tui"
+        target="_blank"
+        rel="noopener noreferrer"
+        (contextmenu)="onYtRightClick($event)"
+        (wheel)="onYtWheel($event)"
+        class="waybar-island pill-ytmusic inline-flex items-center gap-1.5 truncate max-w-[175px] xl:max-w-[225px]"
+        [class.playing]="ytPlaying()"
+        [class.paused]="!ytPlaying()"
+      >
+        <!-- Music note icon (󰎆) -->
+        <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" />
+        </svg>
+        <span class="truncate">{{ currentTrack().artist }} - {{ currentTrack().title }}</span>
+      </a>
+      <div class="waybar-tooltip waybar-tooltip-left">{{ ytTooltip() }}</div>
+    </div>
+
+    <!-- #custom-twitch (Appears >= 1240px) -->
+    <div class="waybar-tooltip-wrapper wb-show-1240">
+      <a
+        href="https://github.com/LucaPezzato/twitch-tui"
+        target="_blank"
+        rel="noopener noreferrer"
+        (contextmenu)="onTwitchRightClick($event)"
+        class="waybar-island pill-twitch inline-flex items-center gap-1.5"
+        [class.live]="!twitchWatching()"
+        [class.watching]="twitchWatching()"
+      >
+        <!-- Twitch icon () -->
+        <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z" />
+        </svg>
+        <span>4</span>
+      </a>
+      <div class="waybar-tooltip waybar-tooltip-left">{{ twitchTooltip() }}</div>
+    </div>
+
+    <!-- #custom-postit (Appears >= 1460px) -->
+    <div class="waybar-tooltip-wrapper wb-show-1460">
+      <a
+        href="https://github.com/LucaPezzato/postit-tui"
+        target="_blank"
+        rel="noopener noreferrer"
+        (contextmenu)="onPostitRightClick($event)"
+        class="waybar-island pill-postit inline-flex items-center gap-1.5"
+        [class.has-notes]="!postitDesktopActive()"
+        [class.desktop-active]="postitDesktopActive()"
+      >
+        <!-- Note / Sticky icon (󰠮) -->
+        <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19 3H4.99C3.89 3 3 3.9 3 5l.01 14c0 1.1.89 2 1.99 2h10l6-6V5c0-1.1-.9-2-2-2zm-7 11H7v-2h5v2zm5-4H7V8h10v2zm-3 9.5V14h5.5L14 19.5z" />
+        </svg>
+        <span>2 (3/4✓)</span>
+      </a>
+      <div class="waybar-tooltip waybar-tooltip-left">{{ postitTooltip() }}</div>
+    </div>
+  </div>
+
+  <!-- MODULES CENTER: clock (Always Visible) -->
+  <div class="waybar-tooltip-wrapper shrink-0 sm:justify-self-center">
+    <button
+      type="button"
+      (click)="toggleClockFormat()"
+      class="waybar-island pill-clock inline-flex items-center gap-2"
+    >
+      <!-- Clock / Calendar icon (󰥔 / 󰃭) -->
+      @if (!clockAlt()) {
+        <svg class="w-3.5 h-3.5 text-[#bd93f9] shrink-0" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z" />
+        </svg>
+      } @else {
+        <svg class="w-3.5 h-3.5 text-[#bd93f9] shrink-0" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z" />
+        </svg>
+      }
+      <span>{{ clockFormatted() }}</span>
+    </button>
+    <div class="waybar-tooltip text-left">
+      <div class="text-sm font-bold text-[#bd93f9] mb-1 text-center">{{ calendarHeader() }}</div>
+      <pre class="font-mono text-[11px] leading-snug text-[#f8f8f2]">{{ calendarGrid() }}</pre>
+    </div>
+  </div>
+
+  <!-- MODULES RIGHT: group/hardware + group/system (Appears >= 640px) -->
+  <div class="wb-show-640 items-center shrink-0 sm:justify-self-end">
+    <!-- #hardware: CPU + Memory (Appears >= 1060px) -->
+    <div class="waybar-island hardware-island wb-show-1060">
+      <!-- CPU -->
+      <div class="waybar-tooltip-wrapper">
+        <a routerLink="/config" class="hw-item hover:text-[#bd93f9] transition-colors">
+          <!-- CPU icon () -->
+          <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M15 9H9v6h6V9zm-2 4h-2v-2h2v2zm8-2V9h-2V7c0-1.1-.9-2-2-2h-2V3h-2v2h-2V3H9v2H7c-1.1 0-2 .9-2 2v2H3v2h2v2H3v2h2v2c0 1.1.9 2 2 2h2v2h2v-2h2v2h2v-2h2c1.1 0 2-.9 2-2v-2h2v-2h-2v-2h2zm-4 6H7V7h10v10z" />
+          </svg>
+          <span>{{ cpuUsage() }}%</span>
+        </a>
+        <div class="waybar-tooltip waybar-tooltip-right">Intel Core i7-8550U (ThinkPad T480)&#10;Governor: performance (cpupower-gui)</div>
+      </div>
+
+      <!-- Memory -->
+      <div class="waybar-tooltip-wrapper">
+        <span class="hw-item">
+          <!-- RAM icon () -->
+          <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
+          </svg>
+          <span>{{ ramPercent() }}%</span>
+        </span>
+        <div class="waybar-tooltip waybar-tooltip-right">RAM: {{ ramUsedGb() }}G / 31.2G ({{ ramPercent() }}%)&#10;Swap: 0.0G / 8.0G</div>
+      </div>
+    </div>
+
+    <!-- #system (Network, Bluetooth, Pulseaudio, Backlight, Battery, Power) -->
+    <div class="waybar-island system-island">
+      <!-- Network (Appears >= 820px) -->
+      <div class="waybar-tooltip-wrapper wb-show-820">
+        <span class="sys-item">
+          <!-- Wi-Fi icon () -->
+          <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3a4.237 4.237 0 0 0-6 0zm-4-4l2 2a7.074 7.074 0 0 1 10 0l2-2C15.14 9.14 8.87 9.14 5 13z" />
+          </svg>
+        </span>
+        <div class="waybar-tooltip waybar-tooltip-right">  PezzatoDev-5G (94%)&#10;󰩟  wlan0 (5180 MHz)&#10;󰓅  Arch Linux • Hyprland</div>
+      </div>
+
+      <!-- Bluetooth (Appears >= 820px) -->
+      <div class="waybar-tooltip-wrapper wb-show-820">
+        <span class="sys-item sys-bluetooth">
+          <!-- Bluetooth connected icon (󰂱) -->
+          <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M17.71 7.71L12 2h-1v7.59L6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 11 14.41V22h1l5.71-5.71-4.3-4.29 4.3-4.29zM13 5.83l1.88 1.88L13 9.59V5.83zm1.88 10.46L13 18.17v-3.76l1.88 1.88z" />
+          </svg>
+        </span>
+        <div class="waybar-tooltip waybar-tooltip-right">󰂱 ThinkPad T480 (connected)&#10;&#10;• Split Keyboard (92%)&#10;• WH-1000XM4 (85%)</div>
+      </div>
+
+      <!-- Pulseaudio (Appears >= 820px) -->
+      <div class="waybar-tooltip-wrapper wb-show-820">
+        <button
+          type="button"
+          (click)="toggleMute()"
+          (wheel)="onVolumeWheel($event)"
+          class="sys-item sys-pulseaudio"
+          [class.muted]="muted()"
+        >
+          @if (muted() || volume() === 0) {
+            <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+            </svg>
+            <span>Muted</span>
+          } @else {
+            <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" />
+            </svg>
+            <span>{{ volume() }}%</span>
+          }
+        </button>
+        <div class="waybar-tooltip waybar-tooltip-right">PipeWire Audio • Click: Mute │ Scroll: Volume</div>
+      </div>
+
+      <!-- Backlight (Appears >= 1240px) -->
+      <div class="waybar-tooltip-wrapper wb-show-1240">
+        <span (wheel)="onBrightnessWheel($event)" class="sys-item">
+          <!-- Sun / Brightness icon ( / ) -->
+          <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69zM12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6zm0-10c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4z" />
+          </svg>
+          <span>{{ brightness() }}%</span>
+        </span>
+        <div class="waybar-tooltip waybar-tooltip-right">intel_backlight • Scroll: Luminosità</div>
+      </div>
+
+      <!-- Custom Dual Battery (Appears >= 640px) -->
+      <div class="waybar-tooltip-wrapper">
+        <span class="sys-item sys-battery" [class.charging]="batteryCharging()">
+          <!-- Charging Bolt + Battery icon () -->
+          <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4zM11 20v-5.5H9L13 7v5.5h2L11 20z" />
+          </svg>
+          <span>{{ batteryPct() }}%</span>
+        </span>
+        <div class="waybar-tooltip waybar-tooltip-right">{{ batteryTooltip() }}</div>
+      </div>
+
+      <!-- Custom Power (Appears >= 640px) -->
+      <div class="waybar-tooltip-wrapper">
+        <button
+          type="button"
+          (click)="openSyspower()"
+          class="sys-item sys-power"
+          aria-label="Power Menu"
+        >
+          <!-- Power icon () -->
+          <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M13 3h-2v10h2V3zm4.83 2.17l-1.42 1.42C17.99 7.86 19 9.81 19 12c0 3.87-3.13 7-7 7s-7-3.13-7-7c0-2.19 1.01-4.14 2.58-5.42L6.17 5.17C4.23 6.82 3 9.26 3 12c0 4.97 4.03 9 9 9s9-4.03 9-9c0-2.74-1.23-5.18-3.17-6.83z" />
+          </svg>
+        </button>
+        <div class="waybar-tooltip waybar-tooltip-right">Power Menu (syspower)</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- SYSPOWER GTK4 DRACULA OVERLAY MODAL (~/.config/sys64/power/style.css) -->
+@if (syspowerOpen()) {
+  <div
+    class="syspower-overlay fixed inset-0 z-100 flex items-center justify-center p-4 animate-fade-in"
+    (click)="closeSyspower()"
+  >
+    <div
+      class="bg-[#282a36]/95 border border-[#44475a] rounded-2xl p-6 shadow-2xl max-w-2xl w-full text-center flex flex-col items-center gap-4"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="text-[#f8f8f2] text-lg font-bold tracking-wide">
+        {{ syspowerStatus() }}
+      </div>
+
+      <div class="flex flex-wrap items-center justify-center">
+        <button
+          type="button"
+          (click)="triggerPowerAction('poweroff', '/')"
+          class="syspower-btn syspower-shutdown"
+        >
+          ⏻ Shutdown [u]
+        </button>
+        <button
+          type="button"
+          (click)="triggerPowerAction('reboot', '/config')"
+          class="syspower-btn syspower-reboot"
+        >
+          ↻ Reboot [r]
+        </button>
+        <button
+          type="button"
+          (click)="triggerPowerAction('logout', '/')"
+          class="syspower-btn syspower-logout"
+        >
+          󰍃 Logout [l]
+        </button>
+        <button
+          type="button"
+          (click)="triggerPowerAction('suspend', '/cinema')"
+          class="syspower-btn syspower-suspend"
+        >
+          󰒲 Suspend [s]
+        </button>
+        <button
+          type="button"
+          (click)="triggerPowerAction('hibernate')"
+          class="syspower-btn syspower-hibernate"
+        >
+          ❄ Hibernate
+        </button>
+        <button
+          type="button"
+          (click)="closeSyspower()"
+          class="syspower-btn syspower-shutdown"
+        >
+          ✕ Cancel [c]
+        </button>
+      </div>
+
+      <span class="text-xs text-[#6272a4] font-mono">
+        Replica di ~/.config/sys64/power/style.css • Premi ESC o [c] per chiudere
+      </span>
+    </div>
+  </div>
+}

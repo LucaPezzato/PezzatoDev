@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 
 import { PezBusinessCard } from './business-card';
 
@@ -8,7 +9,8 @@ describe('PezBusinessCard', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PezBusinessCard]
+      imports: [PezBusinessCard],
+      providers: [provideRouter([])]
     })
     .compileComponents();
 
